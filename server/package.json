@@ -1,0 +1,52 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "online chat backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "websocket",
+    "nodejs",
+    "koa"
+  ],
+  "author": "Edmond Guan",
+  "license": "ISC",
+  "dependencies": {
+    "co": "^4.6.0",
+    "debug": "^2.2.0",
+    "koa": "^2.0.0",
+    "koa-bodyparser": "^2.0.1",
+    "koa-convert": "^1.2.0",
+    "koa-cors": "0.0.16",
+    "koa-json": "^1.1.1",
+    "koa-logger": "^1.3.0",
+    "koa-onerror": "^1.3.1",
+    "koa-router": "^7.0.0",
+    "koa-static": "^1.5.2",
+    "koa2-multiparty": "^1.0.1",
+    "mysql2": "^1.5.1",
+    "runkoa": "^1.5.2",
+    "sequelize": "^4.32.3"
+  },
+  "devDependencies": {
+    "babel-cli": "~6.3.17",
+    "babel-core": "~6.3.26",
+    "babel-eslint": "^8.2.3",
+    "babel-plugin-syntax-object-rest-spread": "^6.3.13",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.3.16",
+    "babel-plugin-transform-es2015-spread": "^6.3.14",
+    "babel-plugin-transform-object-rest-spread": "^6.3.13",
+    "babel-polyfill": "^6.3.14",
+    "babel-preset-es2017": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^5.0.0",
+    "jsonwebtoken": "^8.1.1",
+    "koa-send": "^5.0.0",
+    "mocha": "^2.4.5",
+    "nodemon": "^1.9.1",
+    "should": "^8.3.0",
+    "supertest": "^1.2.0"
+  }
+}
