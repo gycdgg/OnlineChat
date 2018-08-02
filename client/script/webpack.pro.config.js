@@ -94,18 +94,7 @@ const config = {
   resolve: {
     extensions: [
       '', '.js', '.jsx', '.styl'
-    ],
-    alias: {
-      'imgs': path.resolve(
-        __dirname, '../src/assets/img/index'
-      ),
-      '$fetch': path.resolve(
-          __dirname, '../util/fetch.js'
-      ),
-      'util': path.resolve(
-        __dirname, '../util/index.js'
-      )
-    }
+    ]
   }
 }
 
