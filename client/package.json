@@ -4,7 +4,10 @@
   "description": "online chat client",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server -process --colors --content-base --history-api-fallback --hot --inline  --config ./script/webpack.dev.config.js",
+    "build": "cross-env NODE_ENV=production webpack -p --process --colors --config ./script/webpack.pro.config.js",
+    "dll": "cross-env NODE_ENV=development webpack -p --process --colors --config script/webpack.dll.config.js"
   },
   "author": "Edmond Guan",
   "license": "ISC",

@@ -1,0 +1,42 @@
+import React from 'react'
+import styles from './styles.styl'
+import 'antd/dist/antd.less'
+import { withRouter } from 'react-router'
+import { Button, message, Input } from 'antd'
+import PropTypes from 'prop-types'
+
+@withRouter
+class Layout extends React.Component {
+  static propTypes = {
+    children: PropTypes.element.isRequired,
+    router: PropTypes.object.isRequired
+  }
+
+  handleClick = () => {
+    fetch('/api/admin/session', {
+      method: 'DELETE'
+    }).then(() => {
+      this.props.router.push('login')
+    }).catch(err => {
+      console.log(err)
+      message.error('登出失败')
+    })
+  }
+  
+  render() {
+    return <div className = { styles.container }>
+      <div className = { styles.container__header }>
+        <span>欢迎进入控制台</span>
+        <span className = { styles.container__header__button }>
+          <Button onClick = { this.handleClick } >退出</Button>
+        </span>
+      </div>
+      <div className = { styles.container__main }>
+        <Input/>
+      </div>
+      <div className = { styles.container__footer }>All rights Reserved by Edmond Guan</div>
+    </div>
+  }
+}
+
+export default Layout

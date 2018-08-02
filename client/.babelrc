@@ -1,0 +1,22 @@
+{
+  "presets": [
+    "es2015",
+    "es2017",
+    "react"
+  ],
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-class-properties",
+    "babel-plugin-transform-regenerator"
+  ],
+  "env": {
+    "development": {
+      "presets": [
+        "react-hmre"
+      ]
+    },
+    "testing": {
+      "sourceMaps": "inline"
+    }
+  }
+}
