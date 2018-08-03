@@ -2,27 +2,23 @@ import Koa from 'koa'
 import convert from 'koa-convert'
 import logger from 'koa-logger'
 import bodyParser from 'koa-bodyparser'
-import IO from 'koa-socket'
+import IO from 'socket.io'
+import http from 'http'
+
+
 let app = new Koa()
-const io = new IO({
-  ioOptions: {
-    pingTimeout: 10000,
-    pingInterval: 5000,
-  }
-})
+const server = http.createServer(app.callback())
 
-io.attach(app)
-app.io.on('connection', async (ctx) => {
-  console.log(`>>>connection ${ctx.socket.id} ${ctx.socket.request.remoteAddress}success`)
-  // todo
-})
+const io = IO(server)
 
-app.io.on('disconnect', async (ctx) => {
-  console.log(`  >>>> disconnect ${ctx.socket.id}`)
-  await Socket.remove({
-    id: ctx.socket.id,
+io.sockets.on('connection', (socket) => {
+  console.log( 'success', socket.id)
+  socket.on('test', async (data) => {
+    console.log(data)
   })
+  socket.emit('test', 'server account')
 })
+
 app.use(convert(logger()))
 app.use(bodyParser())
 app.use(async (ctx, next) => {
@@ -41,4 +37,4 @@ app.use(async (ctx, next) => {
     console.log('server error:' + error)
   })
   
-export default app
+server.listen(3001)

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon bin/run"
+    "start": "nodemon app.js"
   },
   "keywords": [
     "websocket",
@@ -25,9 +25,11 @@
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.0",
     "koa-onerror": "^4.0.0",
+    "koa-route": "^3.2.0",
     "koa-router": "^7.0.0",
     "koa-socket": "^4.4.0",
     "koa-static": "^5.0.0",
+    "koa-websocket": "^5.0.1",
     "koa2-multiparty": "^1.0.1",
     "mysql2": "^1.6.1",
     "runkoa": "^1.5.2",
