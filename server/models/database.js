@@ -1,5 +1,5 @@
 const databaseInfo = {
-  databaseName: 'edmond',
+  databaseName: 'chatroom',
   username: 'root',
   password: 'root',
   host: 'localhost',
