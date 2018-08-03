@@ -4,15 +4,6 @@ import 'antd/dist/antd.less'
 import { withRouter } from 'react-router'
 import { Button, message, Input } from 'antd'
 import PropTypes from 'prop-types'
-import * as io from 'socket.io-client'
-
-const socket = io.connect('http://localhost:3333/')
-
-// 测试是否链接上websocket
-socket.on('connect', () => console.log('连接socket服务器成功'))
-
-socket.emit('login', sessionStorage.getItem('username'))
-
 
 
 @withRouter
@@ -44,7 +35,7 @@ class Layout extends React.Component {
         </span>
       </div>
       <div className = { styles.container__main }>
-        <Input/>
+        { this.props.children }
       </div>
       <div className = { styles.container__footer }>All rights Reserved by Edmond Guan</div>
     </div>
