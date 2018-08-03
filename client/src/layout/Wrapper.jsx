@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './styles.styl'
 import 'antd/dist/antd.less'
 import { withRouter } from 'react-router'
-import { Button, message, Input } from 'antd'
+import { Button, message } from 'antd'
 import PropTypes from 'prop-types'
 
 

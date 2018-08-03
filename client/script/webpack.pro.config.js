@@ -94,7 +94,10 @@ const config = {
   resolve: {
     extensions: [
       '', '.js', '.jsx', '.styl'
-    ]
+    ],
+    alias: {
+      '$fetch': path.resolve(__dirname, '../util/fetch.js')
+    }
   }
 }
 
