@@ -3,20 +3,29 @@ import React from 'react'
 import { Button, Input } from 'antd'
 import { connect } from 'react-redux'
 import * as messageActions from '../action/message'
+import { checkAuth } from '../action/user'
 import PropTypes from 'prop-Types'
 import socket from '../socket'
+
 const TextArea = Input.TextArea
-@connect(message => message, (dispatch) => ({
+
+@connect(({ message, user }) => ({ message, user }), (dispatch) => ({
   getMessage: (...args) => {
     dispatch(messageActions.getMessage(...args))
   },
   sendMessage: (...args) => {
     dispatch(messageActions.sendMessage(...args))
+  },
+  checkAuth: (...args) => {
+    dispatch(checkAuth(...args))
   }
 }))
+
 class Chatroom extends React.Component {
   
   static propTypes  = {
+    checkAuth: PropTypes.func.isRequired,
+    getMessage: PropTypes.func.isRequired,
     message: PropTypes.object.isRequired
   }
 
@@ -25,6 +34,8 @@ class Chatroom extends React.Component {
   }
 
   componentDidMount() {
+    console.log('this.props', this.props.user)
+    this.props.checkAuth()
     socket.on('message', (data) => {
       this.props.getMessage(data)
     })

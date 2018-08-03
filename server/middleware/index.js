@@ -6,17 +6,16 @@ import { verifyToken } from '../util'
  * @param {function} fn
  * @return {function} asnyc
  */
-const normalizeResponse = (fn, auth = false) => async (ctx, next) => {
-  if(ctx.path.includes('/admin') && auth  === false) {
-    if(!(ctx.session && ctx.session.id)) {
-      ctx.status = 403
-      ctx.body = {
-        name: 'unauthortized',
-        message: 'user or client unauthortized'
-      }
-      return
+const normalizeResponse = (fn) => async (ctx, next) => {
+  if(!(ctx.session && ctx.session.id)) {
+    ctx.status = 403
+    ctx.body = {
+      name: 'unauthortized',
+      message: 'user or client unauthortized'
     }
+    return
   }
+
   try{
     let data = await fn(ctx, next)
     ctx.status = 200
