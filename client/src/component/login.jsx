@@ -1,4 +1,4 @@
-import { Form, Icon, Input, Button, message } from 'antd'
+import { Form, Icon, Input, Button } from 'antd'
 import styles from './styles'
 import { withRouter } from 'react-router'
 import PropTypes from 'prop-types'
@@ -17,11 +17,10 @@ class Login extends React.Component {
     e.preventDefault()
     this.props.form.validateFields( async(err, values) => {
       if (!err) {
-        await fetch('/api/admin/session', {
+        await fetch('/api/session', {
           method: 'POST',
           body: values
         })
-        this.props.router.push('console')
       }
     })
   }

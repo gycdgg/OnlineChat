@@ -5,8 +5,9 @@ import { connect } from 'react-redux'
 import * as messageActions from '../action/message'
 import { checkAuth } from '../action/user'
 import PropTypes from 'prop-Types'
+import Login from './Login'
 import socket from '../socket'
-
+import Chatroom from './chatroom'
 const TextArea = Input.TextArea
 
 @connect(({ message, user }) => ({ message, user }), (dispatch) => ({
@@ -21,12 +22,13 @@ const TextArea = Input.TextArea
   }
 }))
 
-class Chatroom extends React.Component {
+class App extends React.Component {
   
   static propTypes  = {
     checkAuth: PropTypes.func.isRequired,
     getMessage: PropTypes.func.isRequired,
-    message: PropTypes.object.isRequired
+    message: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired
   }
 
   state = {
@@ -34,7 +36,6 @@ class Chatroom extends React.Component {
   }
 
   componentDidMount() {
-    console.log('this.props', this.props.user)
     this.props.checkAuth()
     socket.on('message', (data) => {
       this.props.getMessage(data)
@@ -46,15 +47,11 @@ class Chatroom extends React.Component {
   }
 
   render() {
+    const { user } = this.props
     return <div>
-      <p>
-        消息内容
-        { this.props.message.list.map((v, i) => <div key = { i }>{ v && v.content }</div>) }
-      </p>
-      <TextArea value = { this.state.inputValue } onChange = { (e) => this.setState({ inputValue: e.target.value }) }/>
-      <Button onClick = { this.handleClick }>确认</Button>
+      { !user.isLogin ? <Chatroom/> : <Login/> }
     </div>
   }
 }
 
-export default Chatroom
+export default App

@@ -2,7 +2,7 @@ import * as models from './models/index'
 
 (async () => {
   await models.User.sync()
-  await models.User.creat({
+  await models.User.create({
     username: 'edguan',
     password: '123456',
     is_deleted: false
