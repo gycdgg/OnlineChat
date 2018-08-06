@@ -54,7 +54,7 @@ class Content extends React.Component {
     return <div className = { styles.main__content }>
       <div className = { styles.main__content__messages }>
         { message.list.map((v, i) => <div key = { i } className = { user.id === v.userId ? styles.main__content__messages__right :  styles.main__content__messages__left }>
-        <span>{ v.content }</span>
+        <span className = { styles.main__content__messages__item }>{ v.content }</span>
         <span> { v.username } </span>
         <span> { moment(v.time).format('HH:mm:ss') }</span>
         </div>) }
