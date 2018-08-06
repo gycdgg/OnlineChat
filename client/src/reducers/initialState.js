@@ -4,7 +4,7 @@ export default {
   },
   user: {
     id: '',
-    name: '',
+    username: '',
     avatar: '',
     details: '',
     isLogin: false

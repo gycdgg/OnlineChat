@@ -1,26 +1,26 @@
 import { Form, Icon, Input, Button } from 'antd'
 import styles from './styles'
-import { withRouter } from 'react-router'
 import PropTypes from 'prop-types'
 import React from 'react'
 import fetch from '$fetch'
 const FormItem = Form.Item
+import { connect } from 'react-redux'
+import * as userAction from '../action/user'
 
 @Form.create()
-@withRouter
+@connect(({ user }) => ({ user }), (dispatch) => ({
+  login: (...args) => dispatch(userAction.login(...args))
+} ))
 class Login extends React.Component {
   static propTypes = {
-    router: PropTypes.object.isRequired,
+    login: PropTypes.func.isRequired,
     form: PropTypes.object.isRequired
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    this.props.form.validateFields( async(err, values) => {
+    this.props.form.validateFields((err, values) => {
       if (!err) {
-        await fetch('/api/session', {
-          method: 'POST',
-          body: values
-        })
+        this.props.login(values)
       }
     })
   }

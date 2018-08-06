@@ -11,9 +11,6 @@ import Chatroom from './chatroom'
 const TextArea = Input.TextArea
 
 @connect(({ message, user }) => ({ message, user }), (dispatch) => ({
-  getMessage: (...args) => {
-    dispatch(messageActions.getMessage(...args))
-  },
   sendMessage: (...args) => {
     dispatch(messageActions.sendMessage(...args))
   },
@@ -26,7 +23,6 @@ class App extends React.Component {
   
   static propTypes  = {
     checkAuth: PropTypes.func.isRequired,
-    getMessage: PropTypes.func.isRequired,
     message: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired
   }
@@ -37,9 +33,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.checkAuth()
-    socket.on('message', (data) => {
-      this.props.getMessage(data)
-    })
   }
 
   handleClick = () => {
@@ -48,8 +41,9 @@ class App extends React.Component {
 
   render() {
     const { user } = this.props
+    console.log(this.props.user)
     return <div>
-      { !user.isLogin ? <Chatroom/> : <Login/> }
+      { user.isLogin ? <Chatroom/> : <Login/> }
     </div>
   }
 }
