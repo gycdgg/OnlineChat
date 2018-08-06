@@ -16,7 +16,7 @@ io.sockets.on('connection', (socket) => {
   console.log( 'success', socket.id)
   // get message and send to frontend
   socket.on('message', async (data) => {
-    socket.emit('message', data)
+    io.emit('message', data)
   })
 
   socket.on('test', (data) => {
