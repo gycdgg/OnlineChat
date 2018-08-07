@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import * as messageActions from '../action/message'
 import { checkAuth } from '../action/user'
 import PropTypes from 'prop-Types'
+import styles from './styles.styl'
 import Login from './Login'
 import socket from '../socket'
 import Chatroom from './chatroom'
@@ -42,7 +43,7 @@ class App extends React.Component {
   render() {
     const { user } = this.props
     console.log(this.props.user)
-    return <div>
+    return <div className = { styles.wrapper }>
       { user.isLogin ? <Chatroom/> : <Login/> }
     </div>
   }

@@ -1,14 +1,9 @@
 
 .main 
-  height  642px
+  height  100%
   width   1000px
   backface-visibility  hidden
   background  #ffffff
-  position  absolute
-  top  50%
-  left  50%
-  margin-left  -500px
-  margin-top  -300px
   display  flex
   border-radius  3px
   &__navi
@@ -17,23 +12,63 @@
     background-color  #2e3238
   &__content
     border-radius 0 3px 3px 0
+    text-align center
     background-color  #eee
     flex  1
     display  flex
     flex-direction  column
+    &__title
+      flex 0 0 51px
+      position relative
+      padding 10px 0
+      margin: 0 19px
+      border-bottom 1px solid #d6d6d6
+      background-color #eee
+      z-index 1024
+      &__text
+        font-weight 400
+        text-align center
+        line-height 30px
+        height 25px
+        display inline-block
+        font-size 14px
+        cursor pointer
+        vertical-align middle
+        max-width 300px
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+        word-wrap normal
+        text-decoration none
+        color #000
     &__messages
-      overflow  scroll
+      overflow  auto
       flex  1
+      height 200px
       word-wrap  break-word
       word-break  break-all
+      padding 0 19px
+      visibility: hidden
+      &:hover
+        visibility: visible
+      &::-webkit-scrollbar
+        width: 6px
+        height 6px
+      &::-webkit-scrollbar:window-inactive
+        display: none
+      &::-webkit-scrollbar-track
+        background-color: transparent
+      &::-webkit-scrollbar-thumb
+        border-radius: 3px
+        background: #c3c3c3
       &__item
         padding  9px 13px
-        min-height  25px;
-        font-size  14px;
-        line-height  1.6;
+        min-height  25px
+        font-size  14px
+        line-height  1.6
         border-radius  3px
-        background-color  #b2e281;
-        max-width  500px;
+        background-color  #b2e281
+        max-width  500px
         margin  0 10px
         display  inline-block
         position relative
@@ -43,8 +78,17 @@
           content " "
           top 14px
           left 100%
-          border-left-color #b2e281;
-          border-left-width 4px;
+          border-left-color #b2e281
+          border-left-width 4px
+      &__name
+        display inline-block
+        width 40px
+        height 40px
+        border-radius 20px
+        background-color #fff
+        vertical-align top
+        text-align center
+        line-height 40px
       &__right
         font-size  14px
         text-align  right
@@ -66,18 +110,29 @@
         width  100%
         border  none
         height  70%
+        resize none
         &:focus
           outline none
       button
         float  right 
         margin-right  10px
-        background-color  #fff;
+        background-color  #fff
         color  #222
-        display  inline-block;
-        border  1px solid #c1c1c1;
+        display  inline-block
+        border  1px solid #c1c1c1
         border-radius  4px
         padding  3px 30px
         font-size  14px
         line-height 1.6
         &:hover
           background #f8f8f8
+    pre
+      margin: 0
+      font-family: inherit
+      font-size: inherit
+      white-space: pre-wrap
+      word-break: normal
+.scrollWrapper
+  visibility: visible
+  &:first-child
+    margin-top 20px

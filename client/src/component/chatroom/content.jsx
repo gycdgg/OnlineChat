@@ -35,34 +35,44 @@ class Content extends React.Component {
 
   handleSumit = () => {
     const { user } = this.props
-    console.log(this.state.inputValue)
+    console.log(this.state.inputValue.trim() === '')
+    if(this.state.inputValue.trim() === '') return
     const message = { username: user.username, userId: user.id, time: new Date(), content: this.state.inputValue }
     this.props.sendMessage(message)
     this.setState({ inputValue: '' })
   }
 
   handleKeypress = (e) => {
-    console.log(window.event.ctrlKey, window.event)
     if(window.event.keyCode === 13 && !window.event.shiftKey) {
       e.preventDefault()
       this.handleSumit()
     }
   }
+
+  // while send message scroll to bottom
+  getDom = (e) => {
+    e && (e.scrollTop = e.scrollHeight)
+  }
   render() {
     const { inputValue } = this.state
     const { message, user } = this.props
     return <div className = { styles.main__content }>
-      <div className = { styles.main__content__messages }>
-        { message.list.map((v, i) => <div key = { i } className = { user.id === v.userId ? styles.main__content__messages__right :  styles.main__content__messages__left }>
-        <span className = { styles.main__content__messages__item }>{ v.content }</span>
-        <span> { v.username } </span>
-        <span> { moment(v.time).format('HH:mm:ss') }</span>
-        </div>) }
+      <div className = { styles.main__content__title }>
+        <div className = { styles.main__content__title__text }>test title</div>
+      </div>
+      <div className = { styles.main__content__messages } ref = { (e) => this.getDom(e) }>
+        <div className = { styles.scrollWrapper }>
+          { message.list.map((v, i) => <div key = { i } className = { user.id === v.userId ? styles.main__content__messages__right :  styles.main__content__messages__left }>
+          <span className = { styles.main__content__messages__item }><pre>{ v.content }</pre></span>
+          <span className = { styles.main__content__messages__name }> { v.username && v.username.slice(0, 2).toUpperCase() } </span>
+          { /* <span> { moment(v.time).format('HH:mm:ss') }</span> */ }
+          </div>) }
+        </div>
       </div>
       <div className = { styles.main__content__input }>
         <textarea 
             autoFocus
-            value = { inputValue } 
+            value = { inputValue }
             onChange = { e =>  this.setState({ inputValue: e.target.value }) }
             onKeyPress = { (e) => this.handleKeypress(e) }
         />
