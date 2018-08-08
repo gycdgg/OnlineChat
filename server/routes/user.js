@@ -7,33 +7,55 @@ class UserController {
   }
 
   async create(ctx) {
-    const { userName: username, password } = ctx.request.body
-    const user = await User.findOne({
-      where: {
-        username, password, is_deleted: false
+    const { userName: username, password, action } = ctx.request.body
+    if(action === 'login') {
+      const user = await User.findOne({
+        where: {
+          username, password, is_deleted: false
+        }
+      })
+      // if user found, sign token and set cookie to browser
+      try{      
+        if(user) {
+          const { token, expiresIn } = signToken(user)
+          ctx.cookies.set('user_id', token, {
+            overwrite: true,
+            maxAge: expiresIn
+          })
+          ctx.status = 200
+          ctx.body = {
+            data: user,
+            message: 'Success'
+          }
+        } else {
+          ctx.status = 403
+          ctx.body = {
+            message: 'Failure'
+          }
+        }
+      }catch(err) {
+        console.log('err', err)
       }
-    })
-    // if user found, sign token and set cookie to browser
-    try{      
-      if(user) {
-        const { token, expiresIn } = signToken(user)
-        ctx.cookies.set('user_id', token, {
-          overwrite: true,
-          maxAge: expiresIn
+    } else {
+      let count = await User.count({
+        where: { username, is_deleted: false }
+      })
+      if(count > 0) {
+        ctx.status = 500
+        ctx.body = {
+          message: 'failed'
+        }
+      } else {
+        let createUser = await User.create({
+          username,
+          password
         })
         ctx.status = 200
         ctx.body = {
-          data: user,
+          data: createUser,
           message: 'Success'
         }
-      } else {
-        ctx.status = 403
-        ctx.body = {
-          message: 'Failure'
-        }
       }
-    }catch(err) {
-      console.log('err', err)
     }
   }
 

@@ -58,27 +58,25 @@ class Content extends React.Component {
   * @param arr
   * if time space > 1min, show time
   */
-  shouldShowTime = (arr) => {
-    let len = arr.length
-    if(len === 0) return false
-    if(len === 1) return true
-    return arr[len - 1]['time'] - arr[len - 2]['time'] > 60000
+  showTime = (v, i, arr) => {
+    if(i === 1) return false
+    if(i === 0) return true
+    return moment(v.time) - moment(arr[i - 1].time) > 60000
   }
   
   render() {
     const { inputValue } = this.state
     const { message, user } = this.props
-    let showTime = this.shouldShowTime(message.list)
     return <div className = { styles.main__content }>
       <div className = { styles.main__content__title }>
         <div className = { styles.main__content__title__text }>test title</div>
       </div>
       <div className = { styles.main__content__messages } ref = { (e) => this.getDom(e) }>
         <div className = { styles.scrollWrapper }>
-          { message.list.map((v, i) => <div key = { i } className = { user.id === v.userId ? styles.main__content__messages__right :  styles.main__content__messages__left }>
+          { message.list.map((v, i, arr) => <div key = { i } className = { user.id === v.userId ? styles.main__content__messages__right :  styles.main__content__messages__left }>
+          { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
           <span className = { `${styles.main__content__messages__item} ${styles.content_left}` }><pre>{ v.content }</pre></span>
           <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }> { v.username && v.username.slice(0, 2).toUpperCase() } </span>
-          { showTime ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
           </div>) }
         </div>
       </div>

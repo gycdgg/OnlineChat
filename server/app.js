@@ -12,18 +12,34 @@ const server = http.createServer(app.callback())
 
 const io = IO(server)
 
-io.sockets.on('connection', (socket) => {
-  console.log( 'success', socket.id)
-  // get message and send to frontend
-  socket.on('message', async (data) => {
+// io.sockets.on('connection', (socket) => {
+//   console.log( 'success', socket.id)
+//   socket.on('message', async (data) => {
+//     console.log(socket.id)
+//     io.emit('message', data)
+//   })
+
+//   socket.on('test', (data) => {
+//     console.log(data)
+//   })
+//   socket.emit('test', 'server account')
+// })
+
+/**
+ * @todo checkAuth
+ */
+io.use(async (ctx, next) => {
+  console.log(ctx.request.headers.cookie)
+  await next()
+})
+
+io.use( async (ctx, next) => {
+  ctx.on('message', async (data) => {
     io.emit('message', data)
   })
-
-  socket.on('test', (data) => {
-    console.log(data)
-  })
-  socket.emit('test', 'server account')
+  await next()
 })
+
 
 app.use(convert(logger()))
 app.use(bodyParser())

@@ -7,8 +7,6 @@ export default {
     username: '',
     avatar: '',
     details: '',
-    isLogin: false,
-    isPWright: true,
-    register_status: undefined
+    isLogin: false
   }
 }

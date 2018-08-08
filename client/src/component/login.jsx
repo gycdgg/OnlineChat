@@ -36,7 +36,13 @@ class Login extends React.Component {
     })
   }
 
-
+  handleRadioChange = (e) => {
+    this.setState({ action: e.target.value })
+    this.props.form.setFieldsValue({
+      userName: '',
+      password: ''
+    })
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form
@@ -46,7 +52,7 @@ class Login extends React.Component {
         <Form className = { styles.login__form } onSubmit = { this.handleSubmit }>
         <h3 className = { styles.login__form__title }>欢迎来聊天室</h3>
         <FormItem >
-            <Radio.Group value = { action } onChange = { e => this.setState({ action: e.target.value }) }>
+            <Radio.Group value = { action } onChange = { this.handleRadioChange }>
               <Radio.Button value = "login">登陆</Radio.Button>
               <Radio.Button value = "register">注册</Radio.Button>
             </Radio.Group>

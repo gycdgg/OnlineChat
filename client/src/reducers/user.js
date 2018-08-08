@@ -8,11 +8,11 @@ export default function message(state = initState.user, action) {
   case userAction.LOGOUT_SUCCESS:
     return state
   case userAction.LOGIN_FAILED:
-    return Object.assign({}, state, { isPWright: false })
+    return Object.assign({}, state)
   case userAction.REGISTER_SUCCESS:
-    return Object.assign({}, state, { register: true })
+    return Object.assign({}, state)
   case userAction.REGISTER_FAILED:
-    return Object.assign({}, state, { register: false })
+    return Object.assign({}, state)
   default: return state
   }
 }

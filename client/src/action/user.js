@@ -1,4 +1,5 @@
 import fetch from '$fetch'
+import { message } from 'antd'
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 const LOGIN_FAILED = 'LOGIN_FAILD'
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
@@ -9,15 +10,19 @@ const login = (user) => (dispatch) => fetch('/api/session', {
   method: 'POST',
   body: user
 }).then(res => {
-  if(user.action === 'login') { 
+  if(user.action === 'login') {
+    message.success('登陆成功')
     dispatch({ type: LOGIN_SUCCESS, payload: res }) 
   } else {
+    message.success('注册成功')
     dispatch({ type: REGISTER_SUCCESS, payload: res })
   }
 }, () => { 
-  if(user.action === 'login') { 
+  if(user.action === 'login') {
+    message.error('账号密码错误')
     dispatch({ type: LOGIN_FAILED, payload: {} }) 
   }else {
+    message.error('您的用户名被捷足先登啦')
     dispatch({ type: REGISTER_FAILED, payload: {} }) 
   }
 })
