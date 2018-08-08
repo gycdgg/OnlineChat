@@ -29,10 +29,6 @@ class Layout extends React.Component {
   render() {
     return <div className = { styles.container }>
       <div className = { styles.container__header }>
-        <span>欢迎进入控制台</span>
-        <span className = { styles.container__header__button }>
-          <Button onClick = { this.handleClick } >退出</Button>
-        </span>
       </div>
       <div className = { styles.container__main }>
         { this.props.children }
