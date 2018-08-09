@@ -6,46 +6,35 @@ import IO from 'socket.io'
 import http from 'http'
 import { checkAuth } from './middleware'
 import routes from './routes'
-
+import { Socket } from './models'
 let app = new Koa()
 const server = http.createServer(app.callback())
 
 const io = IO(server)
 
-// io.sockets.on('connection', (socket) => {
-//   console.log( 'success', socket.id)
-//   socket.on('message', async (data) => {
-//     console.log(socket.id)
-//     io.emit('message', data)
-//   })
-
-//   socket.on('test', (data) => {
-//     console.log(data)
-//   })
-//   socket.emit('test', 'server account')
-// })
-
-/**
- * @todo checkAuth
- */
-io.use(async (ctx, next) => {
-  console.log(ctx.request.headers.cookie)
-  await next()
-})
-
-io.use( async (ctx, next) => {
-  ctx.on('message', async (data) => {
-    io.emit('message', data)
+let _socket
+io.sockets.on('connection', async (socket) => {
+  _socket = socket
+  await Socket.create({
+    _id: socket.id
   })
-  await next()
 })
 
+io.sockets.on('disconnect', async (socket) => {
+  await Socket.destroy({
+    where: {
+      _id: socket.id
+    }
+  })
+})
 
 app.use(convert(logger()))
 app.use(bodyParser())
 app.use( checkAuth ())
-
+// insert socket into ctx
 app.use(async (ctx, next) => {
+  ctx._socket = _socket
+  ctx.io = io
   await next()
   ctx.set('X-Powered-By', 'Koa2')
 })
@@ -53,6 +42,7 @@ app.use(async (ctx, next) => {
     const start = new Date()
     await next()
     const ms = new Date() - start
+    console.log(ctx._socket.id, 'logs')
     console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
   })
   .use(routes.routes(), routes.allowedMethods())

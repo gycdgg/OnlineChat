@@ -1,4 +1,4 @@
-import { User } from '../models'
+import { User, Socket } from '../models'
 import { signToken } from '../util'
 
 class UserController {
@@ -7,6 +7,7 @@ class UserController {
   }
 
   async create(ctx) {
+    console.log('login222222222222', ctx.socket.id)
     const { userName: username, password, action } = ctx.request.body
     if(action === 'login') {
       const user = await User.findOne({
@@ -22,6 +23,14 @@ class UserController {
             overwrite: true,
             maxAge: expiresIn
           })
+          await Socket.update(
+            { user_id: user.id },
+            {
+              where: {
+                _id: ctx._socket.id
+              }
+            }
+          )
           ctx.status = 200
           ctx.body = {
             data: user,
