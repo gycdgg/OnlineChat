@@ -7,6 +7,7 @@ import http from 'http'
 import { checkAuth } from './middleware'
 import routes from './routes'
 import { Socket } from './models'
+
 let app = new Koa()
 const server = http.createServer(app.callback())
 
@@ -14,19 +15,21 @@ const io = IO(server)
 
 let _socket
 io.sockets.on('connection', async (socket) => {
+  console.log('>>connect to socket')
   _socket = socket
   await Socket.create({
     _id: socket.id
   })
-})
-
-io.sockets.on('disconnect', async (socket) => {
-  await Socket.destroy({
-    where: {
-      _id: socket.id
-    }
+  socket.on('disconnect', async () => {
+    console.log('>>enter disconnect')
+    await Socket.destroy({
+      where: {
+        _id: socket.id
+      }
+    })
   })
 })
+
 
 app.use(convert(logger()))
 app.use(bodyParser())

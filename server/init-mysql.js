@@ -1,8 +1,14 @@
 import * as models from './models/index'
 
 (async () => {
+
   await models.User.sync()
   await models.Socket.sync()
+  await models.Group.sync()
+  await models.Friend.sync()
+  await models.User_group.sync()
+  await models.Message.sync()
+
   await models.User.create({
     username: 'edguan',
     password: '123456',
@@ -20,4 +26,5 @@ import * as models from './models/index'
     password: '123456',
     is_deleted: false
   })
+
 })()

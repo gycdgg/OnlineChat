@@ -1,20 +1,17 @@
 import Sequelize from 'sequelize'
 import sequelize from './orm.js'
 
-export default sequelize.define('message', {
+export default sequelize.define('friend', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  content: {
-    type: Sequelize.STRING
-  },
-  is_deleted: {
+  type: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false
   }
 }, {
-  tableName: 'message'
+  tableName: 'friend'
 })
