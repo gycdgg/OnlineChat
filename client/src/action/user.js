@@ -5,6 +5,7 @@ const LOGIN_FAILED = 'LOGIN_FAILD'
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
 const REGISTER_FAILED = 'REGISTER_FAILED'
 const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
+const SELECT_USER = 'SELECT_USER'
 
 const login = (user) => (dispatch) => fetch('/api/session', {
   method: 'POST',
@@ -33,6 +34,7 @@ const logout = () => (dispatch) => fetch('/api/session', {
   method: 'DELETE'
 }).then(res => dispatch({ type: LOGOUT_SUCCESS, payload: res }))
 
+const select_user = (user) => (dispatch) => dispatch({ type: SELECT_USER, payload: user })
 
 export {
   LOGIN_SUCCESS,
@@ -40,7 +42,9 @@ export {
   LOGIN_FAILED,
   REGISTER_SUCCESS,
   REGISTER_FAILED,
+  SELECT_USER,
   login,
   checkAuth,
-  logout
+  logout,
+  select_user
 }

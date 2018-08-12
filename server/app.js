@@ -4,7 +4,7 @@ import logger from 'koa-logger'
 import bodyParser from 'koa-bodyparser'
 import IO from 'socket.io'
 import http from 'http'
-import { checkAuth } from './middleware'
+import { checkAuth, getSocketId } from './middleware'
 import routes from './routes'
 import { Socket } from './models'
 
@@ -30,6 +30,16 @@ io.sockets.on('connection', async (socket) => {
   })
 })
 
+io.use( async (socket, next) => {
+  socket.on('message', async (data) => {
+    const { to } = data
+    const socketIds = await getSocketId(to)
+    if(socketIds.length >= 1) {
+      socketIds.map(socketId => io.sockets.socket(socketId).emit('message', data))
+    }
+  })
+  await next()
+})
 
 app.use(convert(logger()))
 app.use(bodyParser())
@@ -45,7 +55,6 @@ app.use(async (ctx, next) => {
     const start = new Date()
     await next()
     const ms = new Date() - start
-    console.log(ctx._socket.id, 'logs')
     console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
   })
   .use(routes.routes(), routes.allowedMethods())
@@ -55,4 +64,4 @@ app.use(async (ctx, next) => {
     console.log('server error:' + error)
   })
   
-server.listen(3001)
+server.listen(3001）

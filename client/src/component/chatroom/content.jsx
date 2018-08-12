@@ -37,7 +37,7 @@ class Content extends React.Component {
     const { user } = this.props
     console.log(this.state.inputValue.trim() === '')
     if(this.state.inputValue.trim() === '') return
-    const message = { username: user.username, userId: user.id, time: new Date(), content: this.state.inputValue }
+    const message = { username: user.username, from: user.id, to: 2, time: new Date(), content: this.state.inputValue }
     this.props.sendMessage(message)
     this.setState({ inputValue: '' })
   }

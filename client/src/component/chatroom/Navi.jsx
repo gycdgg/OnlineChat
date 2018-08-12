@@ -3,7 +3,10 @@ import styles from './styles.styl'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import socket from '../../socket'
-
+const friends = [
+  { id: 3, username: 'wenqian' },
+  { id: 4, username: 'rooby' }
+]
 @connect(({ user, message }) => ({ user, message }))
 
 class Navi extends React.Component {
