@@ -64,4 +64,4 @@ app.use(async (ctx, next) => {
     console.log('server error:' + error)
   })
   
-server.listen(3001）
+server.listen(3001)
