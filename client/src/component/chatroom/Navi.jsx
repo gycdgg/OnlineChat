@@ -3,6 +3,7 @@ import styles from './styles.styl'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import socket from '../../socket'
+import NaviHeader from './NaviHeader'
 const friends = [
   { id: 3, username: 'wenqian' },
   { id: 4, username: 'rooby' }
@@ -28,7 +29,9 @@ class Navi extends React.Component {
   
   render() {
     return <div className = { styles.main__navi }>
-      <div className = { styles.header }>this is header</div>
+      <div className = { styles.header }>
+        <NaviHeader/>
+      </div>
       <div className = { styles.content }>
         <div className = { styles.content__chatContact } onClick = { () => this.handleClick('aaa') }>
           <div className = { styles.content__chatContact__avatar }></div>

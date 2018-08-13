@@ -7,7 +7,6 @@ class UserController {
   }
 
   async create(ctx) {
-    console.log('login222222222222', ctx.socket.id)
     const { userName: username, password, action } = ctx.request.body
     if(action === 'login') {
       const user = await User.findOne({

@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 import { normalizeResponse } from '../middleware'
 import userController from './user'
-
+import friendsController from './friend'
 const router = Router()
 
 /**
@@ -16,5 +16,9 @@ router.post('/api/session', userController.create)
 router.put('/api/session', normalizeResponse(userController.update))
 router.delete('/api/session', normalizeResponse(userController._delete))
 
+router.get('/api/friends/:id?', normalizeResponse(friendsController._get))
+router.post('/api/friends', friendsController.create)
+router.put('/api/friends', normalizeResponse(friendsController.update))
+router.delete('/api/friends', normalizeResponse(friendsController._delete))
 
 export default router

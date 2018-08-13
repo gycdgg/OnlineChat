@@ -42,7 +42,7 @@ class Content extends React.Component {
     this.setState({ inputValue: '' })
   }
 
-  // fix enter useless issue on fire fox
+  // fix enter useless issue on firefox
   handleKeypress = (e) => {
     const event = window.event || e
     if((event.keyCode === 13 || event.which === 13) && !event.shiftKey) {

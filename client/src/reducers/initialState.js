@@ -8,5 +8,6 @@ export default {
     avatar: '',
     details: '',
     isLogin: false
-  }
+  },
+  friends: []
 }
