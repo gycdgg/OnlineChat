@@ -75,7 +75,7 @@ class Content extends React.Component {
       </div>
       <div className = { styles.main__content__messages } ref = { (e) => this.getDom(e) }>
         <div className = { styles.scrollWrapper }>
-          { message.list.map((v, i, arr) => <div key = { i } className = { user.id === v.userId ? styles.main__content__messages__right :  styles.main__content__messages__left }>
+          { message.list.map((v, i, arr) => <div key = { i } className = { user.id === v.from ? styles.main__content__messages__right :  styles.main__content__messages__left }>
           { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
           <span className = { `${styles.main__content__messages__item} ${styles.content_left}` }><pre>{ v.content }</pre></span>
           <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }> { v.username && v.username.slice(0, 2).toUpperCase() } </span>

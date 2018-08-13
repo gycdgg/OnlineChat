@@ -1,4 +1,4 @@
-import socket, { User } from '../models'
+import { User } from '../models'
 import { verifyToken } from '../util'
 import { Socket } from '../models'
 /**
@@ -47,6 +47,14 @@ const checkAuth = () => async (ctx, next) => {
     if (id) {
       let userInfo = await User.findById(id)
       if(userInfo) {
+        await Socket.update(
+          { user_id: userInfo.id },
+          {
+            where: {
+              _id: ctx._socket.id
+            }
+          }
+        )
         ctx.session = {}
         ctx.session.id = id
 
@@ -62,10 +70,10 @@ const checkAuth = () => async (ctx, next) => {
  * get socketid by user_id
  * one user can have serveral socket_id
  */
-const getSocketId = () => async (id) => {
-  let sockets = await socket.findAll({
+const getSocketId = async (id) => {
+  let sockets = await Socket.findAll({
     where: { user_id: id }
   })
-  sockets.map(socket => socket && socket._id)
+  return sockets.map(socket => socket && socket._id)
 }
 export  { normalizeResponse, checkAuth, getSocketId }

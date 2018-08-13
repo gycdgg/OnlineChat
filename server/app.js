@@ -6,7 +6,7 @@ import IO from 'socket.io'
 import http from 'http'
 import { checkAuth, getSocketId } from './middleware'
 import routes from './routes'
-import { Socket } from './models'
+import { Socket, Message } from './models'
 
 let app = new Koa()
 const server = http.createServer(app.callback())
@@ -15,7 +15,7 @@ const io = IO(server)
 
 let _socket
 io.sockets.on('connection', async (socket) => {
-  console.log('>>connect to socket')
+  console.log('>>connect to socket:', socket.id )
   _socket = socket
   await Socket.create({
     _id: socket.id
@@ -32,10 +32,15 @@ io.sockets.on('connection', async (socket) => {
 
 io.use( async (socket, next) => {
   socket.on('message', async (data) => {
-    const { to } = data
+    const { from, to } = data
+    await Message.create(data)
     const socketIds = await getSocketId(to)
+    const _socketIds = await getSocketId(from)
     if(socketIds.length >= 1) {
-      socketIds.map(socketId => io.sockets.socket(socketId).emit('message', data))
+      socketIds.forEach(socketId => {
+        io.to(socketId).emit('message', data)
+      })
+      _socketIds.forEach((_socketId) => io.to(_socketId).emit('message', data))
     }
   })
   await next()
@@ -43,7 +48,6 @@ io.use( async (socket, next) => {
 
 app.use(convert(logger()))
 app.use(bodyParser())
-app.use( checkAuth ())
 // insert socket into ctx
 app.use(async (ctx, next) => {
   ctx._socket = _socket
@@ -51,6 +55,7 @@ app.use(async (ctx, next) => {
   await next()
   ctx.set('X-Powered-By', 'Koa2')
 })
+app.use( checkAuth ())
   .use(async (ctx, next) => {
     const start = new Date()
     await next()
