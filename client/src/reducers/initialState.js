@@ -9,5 +9,8 @@ export default {
     details: '',
     isLogin: false
   },
-  friends: []
+  friends: {
+    list: [],
+    selected: {}
+  }
 }

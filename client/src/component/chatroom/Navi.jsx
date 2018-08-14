@@ -6,12 +6,9 @@ import socket from '../../socket'
 import NaviHeader from './NaviHeader'
 import * as friendActions from '../../action/friend'
 
-const friends = [
-  { id: 3, username: 'wenqian' },
-  { id: 4, username: 'rooby' }
-]
 @connect(({ user, message, friends }) => ({ user, message, friends }), (dispatch) => ({
-  get_friend_list: (...args) => dispatch(friendActions.get_friend_list(...args))
+  get_friend_list: (...args) => dispatch(friendActions.get_friend_list(...args)),
+  select_friend: (...args) => dispatch(friendActions.select_friend(...args))
 }))
 
 class Navi extends React.Component {
@@ -20,21 +17,13 @@ class Navi extends React.Component {
     user: PropTypes.object.isRequired,
     message: PropTypes.object.isRequired,
     friends: PropTypes.array.isRequired,
-    get_friend_list: PropTypes.func.isRequired
+    get_friend_list: PropTypes.func.isRequired,
+    select_friend: PropTypes.func.isRequired
   }
 
-  // get friend list
+  // while initial page, get friend list first
   componentDidMount() {
     this.props.get_friend_list()
-  }
-  /**
-   * while switch tab
-   * join a new group
-   */
-  handleClick = (text) => {
-    socket.emit('createGroup', { groupName: text }, (data) => {
-      console.log('get data from backend', data)
-    })
   }
 
   
@@ -47,7 +36,7 @@ class Navi extends React.Component {
       </div>
       <div className = { styles.content }>
         {
-          friends.map((v, i) => <div className = { styles.content__chatContact } onClick = { () => this.handleClick('aaa') } key = { i }>
+          friends.list.map((v, i) => <div className = { styles.content__chatContact } onClick = { () => this.props.select_friend(v) } key = { i }>
           <div className = { styles.content__chatContact__avatar }></div>
           <div className = { styles.content__chatContact__info }>
             <div className = { styles.name }>{ v.username }</div>
