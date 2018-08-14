@@ -6,7 +6,6 @@ import { checkAuth } from '../action/user'
 import PropTypes from 'prop-Types'
 import styles from './styles.styl'
 import Login from './Login'
-import socket from '../socket'
 import Chatroom from './chatroom'
 
 @connect(({ message, user }) => ({ message, user }), (dispatch) => ({
@@ -32,10 +31,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.checkAuth()
-  }
-
-  handleClick = () => {
-    socket.emit('message', { content: this.state.inputValue, user_id: 1 })
   }
 
   render() {

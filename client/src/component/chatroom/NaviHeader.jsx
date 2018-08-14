@@ -3,12 +3,15 @@ import styles from './styles.styl'
 import fetch from '$fetch'
 import * as friendAction from '../../action/friend'
 import { connect } from 'react-redux'
-
+import PropTypes from 'prop-types'
 @connect(( user ) => ( user ), (dispatch) => ({
   get_friend_list: (...args) => dispatch(friendAction.get_friend_list(...args)) 
 }))
 class NaviHeader extends React.Component {
   
+  static propTypes = {
+    user: PropTypes.object.isRequired
+  }
   state = {
     value: null
   }
@@ -26,9 +29,16 @@ class NaviHeader extends React.Component {
   }
   
   render() {
+    const { user } = this.props
     return <div className = { styles.naviHeader }>
-      <input value = { this.state.value } onChange = { (e) => this.setState({ value: e.target.value }) }/>
-      <button onClick = { this.handleAdd }>添加</button>
+    <div className = { styles.naviHeader__header }>    
+      <div className = { styles.naviHeader__header__avatar }><span>{ user.username.slice(0, 2).toUpperCase() }</span></div>
+      <div className = { styles.naviHeader__header__info }>{ user.username }</div>
+    </div>
+    <div className = { styles.naviHeader__search }>
+      <i className = { styles.naviHeader__search__icon }></i>
+      <input value = { this.state.value }  className = { styles.naviHeader__search__input } onChange = { (e) => this.setState({ value: e.target.value }) }/>
+    </div>
     </div>
   }
 }
