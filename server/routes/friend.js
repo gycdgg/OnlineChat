@@ -1,15 +1,36 @@
 import { User, Friend } from '../models'
+import user from './user'
 
 class FriendController {
   async _get(ctx) {
-    return Friend.findAndCountAll({ where: {
-      $or: [
-        { user_id: ctx.session.id },
-        { _user_id: ctx.session.id }
+    // return Friend.findAll({ where: {
+    //   $or: [
+    //     { user_id: ctx.session.id },
+    //     { _user_id: ctx.session.id }
+    //   ]
+    // },
+    // include: [
+    //   { model: User, as: '_friends',  attributes: [ 'id', 'username' ] },
+    //   { model: User, as: 'friends', attributes: [ 'id', 'username' ] },
+    // ]
+    // })
+    const userArr = await User.findOne({
+      where: { id: ctx.session.id },
+      include: [
+        { model: Friend, as: '_friends', include: [{ model: User, as: 'friends' }] },
+        { model: Friend, as: 'friends', include: [{ model: User, as: '_friends' }] },
       ]
-    },
-    include: [{}]
     })
+    let friendsArr = []
+    if(userArr) {
+      userArr.friends.forEach(v => {
+        v._friends && friendsArr.push({ id: v._friends.id, username: v._friends.username })
+      })
+      userArr._friends.forEach(v => {
+        v.friends && friendsArr.push({ id: v.friends.id, username: v.friends.username })
+      })
+    }
+    return friendsArr
   }
 
   async create(ctx) {
@@ -34,9 +55,9 @@ class FriendController {
         message: 'they are friends',
         data: friend }
     } else {
-      friend = await friend.create({
+      friend = await Friend.create({
         user_id: ctx.session.id,
-        _user_id: user_id
+        _user_id: _user_id
       })
       ctx.status = 200
       ctx.body = {

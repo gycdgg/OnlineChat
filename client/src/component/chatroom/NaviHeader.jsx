@@ -1,6 +1,12 @@
 import React from 'react'
 import styles from './styles.styl'
 import fetch from '$fetch'
+import * as friendAction from '../../action/friend'
+import { connect } from 'react-redux'
+
+@connect(( user ) => ( user ), (dispatch) => ({
+  get_friend_list: (...args) => dispatch(friendAction.get_friend_list(...args)) 
+}))
 class NaviHeader extends React.Component {
   
   state = {

@@ -24,6 +24,7 @@ class Content extends React.Component {
     getMessage: PropTypes.func.isRequired,
     sendMessage: PropTypes.func.isRequired
   }
+  
   state = {
     inputValue: ''
   }
