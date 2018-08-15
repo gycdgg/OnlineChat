@@ -5,16 +5,15 @@ if (window.Notification && (window.Notification.permission === 'default' || wind
   window.Notification.requestPermission()
 }
 const icon = 'https://avatars0.githubusercontent.com/u/22490202?s=400&u=221ae40f2567c1015e3a50b61a3b6fb3d4364827&v=4'
-let windowStatus = 'focus'
-window.onfocus = () => windowStatus = 'focus'
-window.onblur = () => windowStatus = 'blur'
+// let showNotification = false
+// document.onvisibilityChange = () => showNotification = document.hidden
 const SEND_MESSAGE = 'SEND_MESSAGE'
 const GET_MESSAGE = 'GET_MESSAGE'
 const ADD_UNREAD = 'ADD_UNREAD'
 const getMessage = () => (dispatch, getState) =>  {
   socket.on('message', (message) => {
     const { user, friends } = getState()
-    if(message.from !== user.id && windowStatus === 'blur') {
+    if(message.from !== user.id && document.hidden ) {
       const title = `${message.username}对你说：`
       const content = message.content
       notification(title, content, icon)

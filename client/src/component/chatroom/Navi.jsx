@@ -26,9 +26,16 @@ class Navi extends React.Component {
     this.props.get_friend_list()
   }
 
-  
+  lastMessage = (arr, id) => {
+    const targetArr = arr.filter(v => v.from === id || v.to === id)
+    const len = targetArr.length
+    if(len >= 1) {
+      return targetArr[len - 1].content
+    }
+    return null
+  }
   render() {
-    const { friends } = this.props
+    const { friends, message } = this.props
     const selectedId = friends.selected && friends.selected.id
     return <div className = { styles.main__navi }>
       <div className = { styles.header }>
@@ -43,7 +50,7 @@ class Navi extends React.Component {
           </div>
           <div className = { styles.content__chatContact__info }>
             <div className = { styles.name }>{ v.username }</div>
-            <div className = { styles.text }>{ v.id }</div>
+            <div className = { styles.text }>{ this.lastMessage(message.list, v.id) }</div>
           </div>
           <div className = { styles.content__chatContact__text }>
           </div>

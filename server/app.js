@@ -41,8 +41,8 @@ io.use( async (socket, next) => {
         console.log(from, to, socketId, socketIds)
         io.to(socketId).emit('message', data)
       })
-      _socketIds.forEach((_socketId) => io.to(_socketId).emit('message', data))
     }
+    _socketIds.forEach((_socketId) => io.to(_socketId).emit('message', data))
   })
   await next()
 })

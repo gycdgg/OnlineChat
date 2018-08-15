@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import * as messageActions from '../../action/message'
 import PropTypes from 'prop-Types'
 import moment from 'moment'
+
 @connect(({ message, user, friends }) => ({ message, user, friends }), (dispatch) => ({
   getMessage: (...args) => {
     dispatch(messageActions.getMessage(...args))
