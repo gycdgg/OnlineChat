@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import * as messageActions from '../../action/message'
 import PropTypes from 'prop-Types'
 import moment from 'moment'
+import emoji from 'node-emoji'
 
 @connect(({ message, user, friends }) => ({ message, user, friends }), (dispatch) => ({
   getMessage: (...args) => {
@@ -28,7 +29,8 @@ class Content extends React.Component {
   }
 
   state = {
-    inputValue: ''
+    inputValue: '',
+    showPicker: false
   }
 
   componentDidMount() {
@@ -77,8 +79,12 @@ class Content extends React.Component {
       return (user.id === v.from && friends.selected.id === v.to) || (user.id === v.to && friends.selected.id === v.from) 
     })
     return <div className = { styles.main__content }>
+    <pre>
+    { emoji.get('heart') } 
+    </pre>
       <div className = { styles.main__content__title }>
-        <div className = { styles.main__content__title__text }>{ friends.selected.username || null }</div>
+      <i className = "em em-baby"></i>
+        <div className = { styles.main__content__title__text }>{ friends.selected.username || null } + { emoji.get('heart') } </div>
       </div>
       { hasSelected ? null : <div className = { styles.main__content__notSelect }>
         <div className = { styles.main__content__notSelect__container }>
@@ -96,13 +102,23 @@ class Content extends React.Component {
         </div>
       </div> : null }
       { hasSelected ? <div className = { styles.main__content__input }>
+        <div className = { styles.main__content__input__toolbar }>
+          <div className = { styles.face } onClick = { () => this.setState({ showPicker: !this.state.showPicker }) }>
+          { this.state.showPicker ? 
+          <div onBlur = { () => { 
+            this.setState({ showPicker: false }) 
+          } }
+          >
+          </div> : null }
+          </div>
+        </div>
         <textarea 
             autoFocus
             value = { inputValue }
             onChange = { e =>  this.setState({ inputValue: e.target.value }) }
             onKeyPress = { (e) => this.handleKeypress(e) }
         />
-        <button onClick = { this.handleSumit }>发送</button>
+        <button onClick = { this.handleSumit } className = { styles.submit }>发送</button>
       </div> : null }
     </div>
   }
