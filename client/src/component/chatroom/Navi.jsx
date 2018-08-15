@@ -28,21 +28,24 @@ class Navi extends React.Component {
 
   
   render() {
-    console.log(this.props.friends, 222222)
     const { friends } = this.props
+    const selectedId = friends.selected && friends.selected.id
     return <div className = { styles.main__navi }>
       <div className = { styles.header }>
         <NaviHeader/>
       </div>
       <div className = { styles.content }>
         {
-          friends.list.map((v, i) => <div className = { styles.content__chatContact } onClick = { () => this.props.select_friend(v) } key = { i }>
-          <div className = { styles.content__chatContact__avatar }></div>
+          friends.list.map((v, i) => <div className = { styles.content__chatContact + ' ' + (selectedId === v.id ? styles.content__active : '') } onClick = { () => this.props.select_friend(v) } key = { i }>
+          <div className = { styles.content__chatContact__avatar }>
+            { v.username.slice(0, 2).toUpperCase() }
+            { v.unread ? <i className = { styles.content__chatContact__avatar__unread }>{ v.unread }</i> : null }
+          </div>
           <div className = { styles.content__chatContact__info }>
             <div className = { styles.name }>{ v.username }</div>
             <div className = { styles.text }>{ v.id }</div>
           </div>
-          <div className = { styles.content__chatContact__ext }>
+          <div className = { styles.content__chatContact__text }>
           </div>
         </div>)
         }

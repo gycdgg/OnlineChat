@@ -71,6 +71,7 @@ class Content extends React.Component {
   render() {
     const { inputValue } = this.state
     const { message, user, friends } = this.props
+    const hasSelected = !!friends.selected.id
     const friendMessage = message.list.filter(v => {
       return (user.id === v.from && friends.selected.id === v.to) || (user.id === v.to && friends.selected.id === v.from) 
     })
@@ -78,7 +79,13 @@ class Content extends React.Component {
       <div className = { styles.main__content__title }>
         <div className = { styles.main__content__title__text }>{ friends.selected.username || null }</div>
       </div>
-      <div className = { styles.main__content__messages } ref = { (e) => this.getDom(e) }>
+      { hasSelected ? null : <div className = { styles.main__content__notSelect }>
+        <div className = { styles.main__content__notSelect__container }>
+          <i></i>
+          <p>No chats selected</p>
+        </div>
+      </div> }
+      { hasSelected ? <div className = { styles.main__content__messages } ref = { (e) => this.getDom(e) }>
         <div className = { styles.scrollWrapper }>
           { friendMessage.map((v, i, arr) => <div key = { i } className = { user.id === v.from ? styles.main__content__messages__right :  styles.main__content__messages__left }>
           { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
@@ -86,8 +93,8 @@ class Content extends React.Component {
           <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }> { v.username && v.username.slice(0, 2).toUpperCase() } </span>
           </div>) }
         </div>
-      </div>
-      <div className = { styles.main__content__input }>
+      </div> : null }
+      { hasSelected ? <div className = { styles.main__content__input }>
         <textarea 
             autoFocus
             value = { inputValue }
@@ -95,7 +102,7 @@ class Content extends React.Component {
             onKeyPress = { (e) => this.handleKeypress(e) }
         />
         <button onClick = { this.handleSumit }>发送</button>
-      </div>
+      </div> : null }
     </div>
   }
 }

@@ -10,13 +10,17 @@ window.onfocus = () => windowStatus = 'focus'
 window.onblur = () => windowStatus = 'blur'
 const SEND_MESSAGE = 'SEND_MESSAGE'
 const GET_MESSAGE = 'GET_MESSAGE'
+const ADD_UNREAD = 'ADD_UNREAD'
 const getMessage = () => (dispatch, getState) =>  {
   socket.on('message', (message) => {
-    const { user } = getState()
+    const { user, friends } = getState()
     if(message.from !== user.id && windowStatus === 'blur') {
       const title = `${message.username}对你说：`
       const content = message.content
       notification(title, content, icon)
+    }
+    if(!(friends.selected && (friends.selected.id === message.from))) {
+      dispatch({ type: ADD_UNREAD, payload: message.from })
     }
     dispatch({ type: GET_MESSAGE, payload: message }) 
   } )
@@ -27,6 +31,7 @@ const sendMessage = (message) => () => {
 }
 
 export {
+  ADD_UNREAD,
   SEND_MESSAGE,
   GET_MESSAGE,
   getMessage,
