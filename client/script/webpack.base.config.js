@@ -46,7 +46,6 @@ const config = {
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!stylus-loader')
       }, {
         test: /\.json$/,
-        exclude: /node_modules/,
         loader: 'json-loader'
       }, {
         test: /\.less$/,
