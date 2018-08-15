@@ -13,7 +13,7 @@ class NaviHeader extends React.Component {
     user: PropTypes.object.isRequired
   }
   state = {
-    value: null
+    value: ''
   }
 
   handleAdd = () => {

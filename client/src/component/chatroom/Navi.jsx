@@ -16,7 +16,7 @@ class Navi extends React.Component {
   static propTypes = {
     user: PropTypes.object.isRequired,
     message: PropTypes.object.isRequired,
-    friends: PropTypes.array.isRequired,
+    friends: PropTypes.object.isRequired,
     get_friend_list: PropTypes.func.isRequired,
     select_friend: PropTypes.func.isRequired
   }

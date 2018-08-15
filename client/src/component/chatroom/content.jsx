@@ -4,8 +4,9 @@ import { connect } from 'react-redux'
 import * as messageActions from '../../action/message'
 import PropTypes from 'prop-Types'
 import moment from 'moment'
-import emoji from 'node-emoji'
-
+import 'emoji-mart/css/emoji-mart.css'
+import data from 'emoji-mart/data/messenger.json'
+import { Picker } from 'emoji-mart'
 @connect(({ message, user, friends }) => ({ message, user, friends }), (dispatch) => ({
   getMessage: (...args) => {
     dispatch(messageActions.getMessage(...args))
@@ -71,8 +72,13 @@ class Content extends React.Component {
     return moment(v.time) - moment(arr[i - 1].time) > 60000
   }
   
+  handleEmojiSelect = (e) => {
+    console.log('e', e)
+    this.setState({ showPicker: false })
+  }
   render() {
-    const { inputValue } = this.state
+    console.log(this.state, 'state')
+    const { inputValue, showPicker } = this.state
     const { message, user, friends } = this.props
     const hasSelected = !!friends.selected.id
     const friendMessage = message.list.filter(v => {
@@ -80,11 +86,10 @@ class Content extends React.Component {
     })
     return <div className = { styles.main__content }>
     <pre>
-    { emoji.get('heart') } 
     </pre>
       <div className = { styles.main__content__title }>
       <i className = "em em-baby"></i>
-        <div className = { styles.main__content__title__text }>{ friends.selected.username || null } + { emoji.get('heart') } </div>
+        <div className = { styles.main__content__title__text }>{ friends.selected.username || null } </div>
       </div>
       { hasSelected ? null : <div className = { styles.main__content__notSelect }>
         <div className = { styles.main__content__notSelect__container }>
@@ -103,12 +108,15 @@ class Content extends React.Component {
       </div> : null }
       { hasSelected ? <div className = { styles.main__content__input }>
         <div className = { styles.main__content__input__toolbar }>
-          <div className = { styles.face } onClick = { () => this.setState({ showPicker: !this.state.showPicker }) }>
-          { this.state.showPicker ? 
-          <div onBlur = { () => { 
-            this.setState({ showPicker: false }) 
-          } }
-          >
+          <div className = { styles.face } onClick = { () => this.setState({ showPicker: true }) }>
+          { showPicker ? <div
+              tabIndex = { 1 }
+              onBlur = { () => { 
+                this.setState({ showPicker: false })
+              } }
+              className = { styles.tool }
+                         >
+          <Picker data = { data } showPreview = { false } showSkinTones = { false } onSelect = { (e) => this.handleEmojiSelect(e) }/>
           </div> : null }
           </div>
         </div>
