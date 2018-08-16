@@ -130,6 +130,7 @@
       &__toolbar
         height 40px
         padding 5px 17px
+        position relative
         .face
           width 30px
           height 30px
@@ -137,10 +138,10 @@
           background-position: -404px -398px
           background-size: 487px 462px
           cursor pointer
-          position relative
-          .tool
-            position absolute
-            top -400px
+        .tool
+          position absolute
+          top -320px
+          transition: all 0.3s
       textarea
         background-color  #eee
         padding  0 10px
@@ -288,3 +289,34 @@
       width 30px
       height 30px
       position absolute
+    .show
+      display block
+      max-height 420px
+      position relative
+      &__container
+        width: 244px
+        top: 36px
+        background-color #33363b
+        box-shadow 0 0 10px #2a2a2a
+        border-radius 2px
+        position: absolute;
+        background-color: #fff;
+        z-index: 99;
+        top: 0;
+        left: 0;
+        outline: none;
+        &__item
+          display: flex
+          overflow: hidden
+          padding: 10px 9px
+          border-bottom: 1px solid #33363b
+          background-color: #393c43
+          .item__info
+            flex: 1
+            display: flex
+            align-items: center
+            justify-content: space-around
+            &__name
+              color: #ffffff
+            &__icon
+              cursor pointer

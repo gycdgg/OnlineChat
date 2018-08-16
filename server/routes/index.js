@@ -21,4 +21,5 @@ router.post('/api/friends', friendsController.create)
 router.put('/api/friends', normalizeResponse(friendsController.update))
 router.delete('/api/friends', normalizeResponse(friendsController._delete))
 
+router.get('/api/users', normalizeResponse(userController.find))
 export default router

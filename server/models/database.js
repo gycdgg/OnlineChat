@@ -9,6 +9,10 @@ const databaseInfo = {
   timezone: '+08:00',
   dialectOptions: {
     ssl: false,
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_unicode_ci',
+    supportBigNumbers: true,
+    bigNumberStrings: true
   }
 }
 

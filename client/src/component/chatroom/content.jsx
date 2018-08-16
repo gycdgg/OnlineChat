@@ -6,7 +6,8 @@ import PropTypes from 'prop-Types'
 import moment from 'moment'
 import 'emoji-mart/css/emoji-mart.css'
 import data from 'emoji-mart/data/messenger.json'
-import { Picker } from 'emoji-mart'
+import { Picker, Emoji, NimbleEmojiIndex  } from 'emoji-mart'
+let emojiIndex = new NimbleEmojiIndex(data)
 @connect(({ message, user, friends }) => ({ message, user, friends }), (dispatch) => ({
   getMessage: (...args) => {
     dispatch(messageActions.getMessage(...args))
@@ -73,22 +74,32 @@ class Content extends React.Component {
   }
   
   handleEmojiSelect = (e) => {
-    console.log('e', e)
+    console.log(e)
+    this.setState({ inputValue: this.state.inputValue + `EMJ${e.id}EMJ` })
     this.setState({ showPicker: false })
   }
+
+  emjRender = () => {
+    const value = this.state.inputValue
+    const arr = value.split('EMJ')
+    return arr.reduce((pre, cur, index) => {
+      if(index % 2 === 0) {
+        return pre + cur
+      } else {
+        return pre + emojiIndex.search(cur).filter(v => v.id = cur)[0].native
+      }
+    }, '')
+  }
+  
   render() {
-    console.log(this.state, 'state')
-    const { inputValue, showPicker } = this.state
+    const { showPicker } = this.state
     const { message, user, friends } = this.props
     const hasSelected = !!friends.selected.id
     const friendMessage = message.list.filter(v => {
       return (user.id === v.from && friends.selected.id === v.to) || (user.id === v.to && friends.selected.id === v.from) 
     })
     return <div className = { styles.main__content }>
-    <pre>
-    </pre>
       <div className = { styles.main__content__title }>
-      <i className = "em em-baby"></i>
         <div className = { styles.main__content__title__text }>{ friends.selected.username || null } </div>
       </div>
       { hasSelected ? null : <div className = { styles.main__content__notSelect }>
@@ -101,14 +112,14 @@ class Content extends React.Component {
         <div className = { styles.scrollWrapper }>
           { friendMessage.map((v, i, arr) => <div key = { i } className = { user.id === v.from ? styles.main__content__messages__right :  styles.main__content__messages__left }>
           { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
-          <span className = { `${styles.main__content__messages__item} ${styles.content_left}` }><pre>{ v.content }</pre></span>
+          <span className = { `${styles.main__content__messages__item} ${styles.content_left}` }><pre>{ v.content.split('EMJ').map((v, i) => i % 2 ? <Emoji emoji = { { id: v, skin: 3 } } size = { 16 } /> : v) }</pre></span>
           <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }> { v.username && v.username.slice(0, 2).toUpperCase() } </span>
           </div>) }
         </div>
       </div> : null }
       { hasSelected ? <div className = { styles.main__content__input }>
         <div className = { styles.main__content__input__toolbar }>
-          <div className = { styles.face } onClick = { () => this.setState({ showPicker: true }) }>
+          <div className = { styles.face } onClick = { () => this.setState({ showPicker: !showPicker }) }></div>
           { showPicker ? <div
               tabIndex = { 1 }
               onBlur = { () => { 
@@ -116,13 +127,14 @@ class Content extends React.Component {
               } }
               className = { styles.tool }
                          >
-          <Picker data = { data } showPreview = { false } showSkinTones = { false } onSelect = { (e) => this.handleEmojiSelect(e) }/>
+          <Picker data = { data } showPreview = { false } style = { { width: 500 } } showSkinTones = { false }
+              onSelect = { (e) => this.handleEmojiSelect(e) }
+          />
           </div> : null }
-          </div>
         </div>
         <textarea 
             autoFocus
-            value = { inputValue }
+            value = { this.emjRender() }
             onChange = { e =>  this.setState({ inputValue: e.target.value }) }
             onKeyPress = { (e) => this.handleKeypress(e) }
         />

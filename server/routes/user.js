@@ -83,6 +83,21 @@ class UserController {
     }
     return data
   }
+
+  //user search other user
+  async find(ctx) {
+    const { name } = ctx.query
+    return User.findAll({
+      where: {
+        username: {
+          $like: '%' + name + '%'
+        },
+        id: {
+          $ne: ctx.session.id
+        }
+      }
+    })
+  }
 }
 
 export default new UserController()
