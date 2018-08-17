@@ -14,7 +14,7 @@ const server = http.createServer(app.callback())
 const io = IO(server)
 
 let _socket
-io.sockets.on('connection', async (socket) => {
+io.on('connection', async (socket) => {
   console.log('>>connect to socket:', socket.id )
   _socket = socket
   await Socket.create({
