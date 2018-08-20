@@ -4,10 +4,11 @@ import logger from 'koa-logger'
 import bodyParser from 'koa-bodyparser'
 import IO from 'socket.io'
 import http from 'http'
+import Static from 'koa-static'
+import path, { dirname } from 'path'
 import { checkAuth, getSocketId } from './middleware'
 import routes from './routes'
 import { Socket, Message } from './models'
-
 let app = new Koa()
 const server = http.createServer(app.callback())
 
@@ -46,7 +47,7 @@ io.use( async (socket, next) => {
   })
   await next()
 })
-
+app.use( Static(path.join(__dirname, '/dist')))
 app.use(convert(logger()))
 app.use(bodyParser())
 // insert socket into ctx

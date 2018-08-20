@@ -1,7 +1,7 @@
 const databaseInfo = {
   databaseName: 'chat',
   username: 'root',
-  password: 'edguan',
+  password: 'root',
   host: 'localhost',
   dialect: 'mysql',
   port: 3306,
