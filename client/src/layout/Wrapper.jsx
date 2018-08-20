@@ -12,9 +12,7 @@ class Layout extends React.Component {
     children: PropTypes.element.isRequired,
     router: PropTypes.object.isRequired
   }
-  componentDidMount() {
-    fetch('/test/111')
-  }
+
   handleClick = () => {
     fetch('/api/admin/session', {
       method: 'DELETE'

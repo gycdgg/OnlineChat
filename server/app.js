@@ -34,7 +34,7 @@ io.on('connection', async (socket) => {
 io.use( async (socket, next) => {
   socket.on('message', async (data) => {
     const { from, to } = data
-    //await Message.create(data)
+    await Message.create(data)
     console.log('message data', data)
     const socketIds = await getSocketId(to)
     const _socketIds = await getSocketId(from)

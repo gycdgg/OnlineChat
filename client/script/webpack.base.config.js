@@ -73,7 +73,12 @@ const config = {
     new webpack
       .optimize
       .CommonsChunkPlugin('vendors.[hash].js'),
-    new ExtractTextPlugin('styles.[hash].css', { allChunk: true })
+    new ExtractTextPlugin('styles.[hash].css', { allChunk: true }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('development')
+      }
+    })
   ],
   resolve: {
     extensions: [

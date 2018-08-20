@@ -2,13 +2,14 @@ import React from 'react'
 import styles from './styles.styl'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import socket from '../../socket'
 import NaviHeader from './NaviHeader'
 import * as friendActions from '../../action/friend'
+import * as messageActions from '../../action/message'
 
 @connect(({ user, message, friends }) => ({ user, message, friends }), (dispatch) => ({
   get_friend_list: (...args) => dispatch(friendActions.get_friend_list(...args)),
-  select_friend: (...args) => dispatch(friendActions.select_friend(...args))
+  select_friend: (...args) => dispatch(friendActions.select_friend(...args)),
+  init_message_list: (...args) => dispatch(messageActions.init_message_list(...args))
 }))
 
 class Navi extends React.Component {
@@ -23,7 +24,8 @@ class Navi extends React.Component {
 
   // while initial page, get friend list first
   componentDidMount() {
-    this.props.get_friend_list()
+    this.props.get_friend_list(),
+    this.props.init_message_list()
   }
 
   lastMessage = (arr, id) => {

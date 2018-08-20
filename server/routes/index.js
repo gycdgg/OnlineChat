@@ -1,11 +1,9 @@
-import Router from 'koa-router'
 import { normalizeResponse } from '../middleware'
 import userController from './user'
 import friendsController from './friend'
-import fs from 'fs'
-import path from 'path'
+import messageController from './message'
+import Router from 'koa-router'
 const router = Router()
-
 /**
  * check login status and get user info
  * get: check session and user login
@@ -25,18 +23,6 @@ router.delete('/api/friends', normalizeResponse(friendsController._delete))
 
 router.get('/api/users', normalizeResponse(userController.find))
 
+router.get('/api/messages', normalizeResponse(messageController._get))
 
-// let readFileThunk = function (src) {
-//   console.log(222)
-//   return new Promise(function (resolve, reject) {
-//     fs.readFile(src, { 'encoding': 'utf8' }, function (err, data) {
-//       if(err) return reject(err)
-//       resolve(data)
-//     })
-//   })
-// }
-// router.get('/', async (ctx, next) => {
-//   console.log(1111)
-//   ctx.body = await readFileThunk(path.resolve(__dirname, '../dist/index.html'))
-// })
 export default router

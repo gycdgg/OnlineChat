@@ -1,7 +1,6 @@
 import socket from '../socket'
 import notification from '../../util/notification'
-
-console.log('notification:', window.Notification.permission)
+import fetch from '$fetch'
 if (window.Notification && (window.Notification.permission === 'default' || window.Notification.permission === 'denied')) {
   window.Notification.requestPermission()
 }
@@ -11,6 +10,10 @@ const icon = 'https://avatars0.githubusercontent.com/u/22490202?s=400&u=221ae40f
 const SEND_MESSAGE = 'SEND_MESSAGE'
 const GET_MESSAGE = 'GET_MESSAGE'
 const ADD_UNREAD = 'ADD_UNREAD'
+const INIT_MESSAGE_LIST = 'INIT_MESSAGE_LIST'
+
+const init_message_list = () => (dispatch) => fetch('/api/messages').then(res=> dispatch({type: INIT_MESSAGE_LIST, payload: res}))
+
 const getMessage = () => (dispatch, getState) =>  {
   socket.on('message', (message) => {
     const { user, friends } = getState()
@@ -35,6 +38,8 @@ export {
   ADD_UNREAD,
   SEND_MESSAGE,
   GET_MESSAGE,
+  INIT_MESSAGE_LIST,
   getMessage,
-  sendMessage
+  sendMessage,
+  init_message_list
 }
