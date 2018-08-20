@@ -1,6 +1,7 @@
 import socket from '../socket'
 import notification from '../../util/notification'
 
+console.log('notification:', window.Notification.permission)
 if (window.Notification && (window.Notification.permission === 'default' || window.Notification.permission === 'denied')) {
   window.Notification.requestPermission()
 }
@@ -14,6 +15,7 @@ const getMessage = () => (dispatch, getState) =>  {
   socket.on('message', (message) => {
     const { user, friends } = getState()
     if(message.from !== user.id && document.hidden ) {
+      console.log('enter ')
       const title = `${message.username}对你说：`
       const content = message.content
       notification(title, content, icon)

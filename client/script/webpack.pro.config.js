@@ -97,7 +97,8 @@ const config = {
     alias: {
       '$fetch': path.resolve(__dirname, '../util/fetch.js')
     }
-  }
+  },
+  devtool: 'inline-eval-source-map'
 }
 
 module.exports = config

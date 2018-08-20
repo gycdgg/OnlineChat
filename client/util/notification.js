@@ -1,4 +1,5 @@
 const notification = (title, body, icon, duration = 3000) => {
+  console.log('enter notification')
   if (window.Notification && window.Notification.permission === 'granted') {
     const n = new window.Notification(
         title,

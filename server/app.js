@@ -34,12 +34,13 @@ io.on('connection', async (socket) => {
 io.use( async (socket, next) => {
   socket.on('message', async (data) => {
     const { from, to } = data
-    await Message.create(data)
+    //await Message.create(data)
+    console.log('message data', data)
     const socketIds = await getSocketId(to)
     const _socketIds = await getSocketId(from)
     if(socketIds.length >= 1) {
       socketIds.forEach(socketId => {
-        console.log(from, to, socketId, socketIds)
+        console.log('from : to',from, to, socketId, socketIds)
         io.to(socketId).emit('message', data)
       })
     }
@@ -47,7 +48,9 @@ io.use( async (socket, next) => {
   })
   await next()
 })
-app.use( Static(path.join(__dirname, '/dist')))
+app.use( Static(path.join(__dirname, '../client/dist'), {
+  maxAge: 365*24*60*60
+}))
 app.use(convert(logger()))
 app.use(bodyParser())
 // insert socket into ctx
