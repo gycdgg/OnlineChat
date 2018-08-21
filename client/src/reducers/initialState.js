@@ -7,7 +7,8 @@ export default {
     username: '',
     avatar: '',
     details: '',
-    isLogin: false
+    isLogin: false,
+    pending: true
   },
   friends: {
     list: [],

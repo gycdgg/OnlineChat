@@ -2,6 +2,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as messageActions from '../action/message'
+import { Spin } from 'antd'
 import { checkAuth } from '../action/user'
 import PropTypes from 'prop-Types'
 import styles from './styles.styl'
@@ -35,9 +36,8 @@ class App extends React.Component {
 
   render() {
     const { user } = this.props
-    console.log(this.props.user)
     return <div className = { styles.wrapper }>
-      { user.isLogin ? <Chatroom/> : <Login/> }
+    { user.pending ? <Spin/> : (user.isLogin ? <Chatroom/> : <Login/>) }
     </div>
   }
 }

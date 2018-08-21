@@ -28,7 +28,9 @@ const login = (user) => (dispatch) => fetch('/api/session', {
   }
 })
 
-const checkAuth = () => (dispatch) => fetch('/api/session').then(res => dispatch({ type: LOGIN_SUCCESS, payload: res }))
+const checkAuth = () => (dispatch) => fetch('/api/session').then(res => dispatch({ type: LOGIN_SUCCESS, payload: res })).catch(() => {
+  dispatch({ type: LOGIN_FAILED, payload: {} })
+})
 
 const logout = () => (dispatch) => fetch('/api/session', {
   method: 'DELETE'

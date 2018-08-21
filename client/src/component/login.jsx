@@ -50,9 +50,9 @@ class Login extends React.Component {
         <h3 className = { styles.login__form__title }>欢迎来聊天室</h3>
         <div className = { styles.login__form__img }><img src = { avatarArr[17] }/></div>
         <FormItem >
-            <Radio.Group value = { action } onChange = { this.handleRadioChange }>
-              <Radio.Button value = "login">登陆</Radio.Button>
-              <Radio.Button value = "register">注册</Radio.Button>
+            <Radio.Group value = { action } onChange = { this.handleRadioChange } buttonStyle = "solid" style = { { width: '100%' } }>
+              <Radio.Button value = "login" style = { { width: '50%', textAlign: 'center' } }>登陆</Radio.Button>
+              <Radio.Button value = "register"  style = { { width: '50%', textAlign: 'center' } }>注册</Radio.Button>
             </Radio.Group>
           </FormItem>
           <FormItem>

@@ -18,11 +18,11 @@ const _fetch = (url, option = {}) => new Promise((resolve, reject) => {
       if(res.ok) {
         return res.json()
       } else {
-        reject({ message: 'Failed' })
+        return reject({ message: 'Failed' })
       }
     })
     .then(res => {
-      if(res.message === 'Success') {
+      if(res && res.message === 'Success') {
         return resolve(res.data)
       }else {
         return reject({ message: 'Failed' })
