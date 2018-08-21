@@ -46,7 +46,8 @@ const config = {
         loader: 'json-loader'
       }, {
         test: /\.less$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader?{modifyVars:{"@primary-color":"#e50012"}}')
+        //loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader?{modifyVars:{"@primary-color":"#e50012"}}'),
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader')
       }
     ]
   },

@@ -7,6 +7,9 @@
   background: url('../assets/bg.jpg') no-repeat 50%;
   background-size: cover;
   &__header
+    @media(max-width 500px){
+        display: none
+      }
     font-size: 1rem
     text-align: center
     flex: 0 0 10%
@@ -18,6 +21,9 @@
   &__main
     flex: 1
   &__footer
+    @media(max-width 500px){
+        display none
+      }
     text-align: center
     font-size: 1rem
     flex: 0 0 10%

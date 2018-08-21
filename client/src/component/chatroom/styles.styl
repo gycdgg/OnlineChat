@@ -7,6 +7,10 @@
   display  flex
   border-radius  3px
   &__navi
+    @media(max-width 600px){
+      flex: 0 0 80px
+      overflow hidden
+    }
     flex  0 0 280px
     border-radius 3px 0 0 3px
     background-color  #2e3238
@@ -240,6 +244,9 @@
       display inline-block
       vertical-align bottom
       .text
+        @media(max-width 500px){
+            display: none
+          }
         height 20px
         color #989898
         font-size 13px
@@ -259,13 +266,14 @@
       display inline-block
       height 40px
       width 40px
+      border-radius: 2px
       background-color #eee
       margin-right: 10px
       img
         width 40px
         height 40px
         background-color: #fff
-        border-radius: 20px
+        border-radius: 2px
         display: inline-block
         text-align: center
         line-height: 40px
@@ -275,6 +283,16 @@
       font-weight: 400
       line-height: 40px
       color: #fff
+      vertical-align: middle;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100px;
+      @media(max-width 500px){
+          width 100px
+          position relative
+          right 10px
+        }
   &__search
     width: 244px
     margin: 0 auto 6px
