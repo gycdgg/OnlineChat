@@ -2,7 +2,6 @@ import React from 'react'
 import styles from './styles.styl'
 import { connect } from 'react-redux'
 import * as messageActions from '../../action/message'
-import avatarArr from '../../assets/index'
 import PropTypes from 'prop-Types'
 import moment from 'moment'
 import 'emoji-mart/css/emoji-mart.css'
@@ -114,7 +113,7 @@ class Content extends React.Component {
           { friendMessage.map((v, i, arr) => <div key = { i } className = { user.id === v.from ? styles.main__content__messages__right :  styles.main__content__messages__left }>
           { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
           <span className = { `${styles.main__content__messages__item} ${styles.content_left}` }><pre>{ v.content.split('EMJ').map((v, i) => i % 2 ? <Emoji emoji = { { id: v, skin: 3 } } size = { 16 } /> : v) }</pre></span>
-          <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }><img src = { avatarArr[v.avatar] }/></span>
+          <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }><img src = { `/avatar/img${v.avatar}.jpg` }/></span>
           </div>) }
         </div>
       </div> : null }
@@ -128,7 +127,7 @@ class Content extends React.Component {
               } }
               className = { styles.tool }
                          >
-          <Picker data = { data } showPreview = { false } style = { { width: 500 } } showSkinTones = { false }
+          <Picker data = { data } showPreview = { false } className = { styles.smart } showSkinTones = { false }
               onSelect = { (e) => this.handleEmojiSelect(e) }
           />
           </div> : null }

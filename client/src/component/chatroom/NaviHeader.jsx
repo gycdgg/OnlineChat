@@ -5,7 +5,6 @@ import { Icon, message } from 'antd'
 import * as friendAction from '../../action/friend'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import avatarArr from '../../assets/index'
 @connect(( user ) => ( user ), (dispatch) => ({
   get_friend_list: (...args) => dispatch(friendAction.get_friend_list(...args)) 
 }))
@@ -47,7 +46,7 @@ class NaviHeader extends React.Component {
     const { value, searchResults } = this.state
     return <div className = { styles.naviHeader }>
     <div className = { styles.naviHeader__header }>    
-      <div className = { styles.naviHeader__header__avatar }><img src = { avatarArr[user.avatar] }/></div>
+      <div className = { styles.naviHeader__header__avatar }><img src = { `/avatar/img${user.avatar}.jpg` }/></div>
       <div className = { styles.naviHeader__header__info }>{ user.username }</div>
     </div>
     <div className = { styles.naviHeader__search }>
@@ -58,7 +57,7 @@ class NaviHeader extends React.Component {
         {
           searchResults.map((v, i) => <div key = { i } className = { styles.show__container__item }>
             <div className = { styles.content__chatContact__avatar }>
-              <img src = { avatarArr[v.avatar] }/>
+              <img src = { `/avatar/img${v.avatar}.jpg` }/>
             </div>
             <div className = { styles.item__info }>
           <div className = { styles.item__info__name }>{ v.username }</div>

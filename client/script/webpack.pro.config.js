@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const poststylus = require('poststylus')
 const autoprefixer = require('autoprefixer')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-
+let BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const config = {
   entry: [
     'babel-polyfill', './src/app.js'
@@ -62,6 +62,7 @@ const config = {
     })
   ],
   plugins: [
+    new BundleAnalyzerPlugin(),
     new webpack.EnvironmentPlugin([ 'NODE_ENV' ]),
     new HtmlWebpackPlugin({ title: 'this is a test title', inject: 'body', template: 'src/templates/index.html', favicon: 'src/assets/favicon.png' }),
     new webpack.DllReferencePlugin({

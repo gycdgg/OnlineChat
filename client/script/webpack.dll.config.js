@@ -16,7 +16,8 @@ const vendors = [
   'redux-thunk',
   'immutable',
   'whatwg-fetch',
-  'isomorphic-fetch'
+  'isomorphic-fetch',
+  'emoji-mart'
 ]
 
 module.exports = {
@@ -28,6 +29,13 @@ module.exports = {
     filename: '[id].dll.js',
     library: '[name]'
   },
+  module: {
+    loaders: [{
+      test: /\.json$/,
+      loader: 'json-loader'
+    }]
+  }
+  ,
   plugins: [
     new webpack.DllPlugin({
       path: path.join(__dirname, '..', 'dist', '[name]-manifest.json'),

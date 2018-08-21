@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import NaviHeader from './NaviHeader'
 import * as friendActions from '../../action/friend'
 import * as messageActions from '../../action/message'
-import avatarArr from '../../assets/index'
 
 @connect(({ user, message, friends }) => ({ user, message, friends }), (dispatch) => ({
   get_friend_list: (...args) => dispatch(friendActions.get_friend_list(...args)),
@@ -49,7 +48,7 @@ class Navi extends React.Component {
         {
           friends.list.map((v, i) => <div className = { styles.content__chatContact + ' ' + (selectedId === v.id ? styles.content__active : '') } onClick = { () => this.props.select_friend(v) } key = { i }>
           <div className = { styles.content__chatContact__avatar }>
-            <img src = { avatarArr[v.avatar] }/>
+            <img src = { `/avatar/img${v.avatar}.jpg` }/>
             { v.unread ? <i className = { styles.content__chatContact__avatar__unread }>{ v.unread }</i> : null }
           </div>
           <div className = { styles.content__chatContact__info }>
