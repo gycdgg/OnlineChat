@@ -7,7 +7,7 @@ class UserController {
   }
 
   async create(ctx) {
-    const { userName: username, password, action } = ctx.request.body
+    const { userName: username, password, action, avatar } = ctx.request.body
     if(action === 'login') {
       const user = await User.findOne({
         where: {
@@ -56,7 +56,8 @@ class UserController {
       } else {
         let createUser = await User.create({
           username,
-          password
+          password,
+          avatar
         })
         ctx.status = 200
         ctx.body = {

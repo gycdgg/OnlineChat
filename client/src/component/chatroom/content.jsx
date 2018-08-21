@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './styles.styl'
 import { connect } from 'react-redux'
 import * as messageActions from '../../action/message'
+import avatarArr from '../../assets/index'
 import PropTypes from 'prop-Types'
 import moment from 'moment'
 import 'emoji-mart/css/emoji-mart.css'
@@ -44,7 +45,7 @@ class Content extends React.Component {
     const { user, friends } = this.props
     console.log(this.state.inputValue.trim() === '')
     if(this.state.inputValue.trim() === '' || friends.selected.id == false) return
-    const message = { username: user.username, from: user.id, to: friends.selected.id, time: new Date(), content: this.state.inputValue }
+    const message = { username: user.username, avatar: user.avatar, from: user.id, to: friends.selected.id, time: new Date(), content: this.state.inputValue }
     this.props.sendMessage(message)
     this.setState({ inputValue: '' })
   }
@@ -113,7 +114,7 @@ class Content extends React.Component {
           { friendMessage.map((v, i, arr) => <div key = { i } className = { user.id === v.from ? styles.main__content__messages__right :  styles.main__content__messages__left }>
           { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
           <span className = { `${styles.main__content__messages__item} ${styles.content_left}` }><pre>{ v.content.split('EMJ').map((v, i) => i % 2 ? <Emoji emoji = { { id: v, skin: 3 } } size = { 16 } /> : v) }</pre></span>
-          <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }> { v.username && v.username.slice(0, 2).toUpperCase() } </span>
+          <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }><img src = { avatarArr[v.avatar] }/></span>
           </div>) }
         </div>
       </div> : null }

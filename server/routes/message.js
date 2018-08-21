@@ -1,6 +1,5 @@
 import { User, Socket, Message } from '../models'
 import { signToken } from '../util'
-import { tmpdir } from 'os';
 
 class MessageController {
   async _get(ctx) {
@@ -8,21 +7,22 @@ class MessageController {
     let msgArr = []
     const messages = await Message.findAll({
       where: {
-        $or:[
-          {from: userId},
-          {to: userId}
+        $or: [
+          { from: userId },
+          { to: userId }
         ]
       },
       include: [
-        { model: User, as: 'from_user'},
+        { model: User, as: 'from_user' },
       ],
-      order: ['id']
+      order: [ 'id' ]
     })
-    messages.forEach(v=>{
+    messages.forEach(v => {
       let tmp = {}
       tmp.from = v.from
       tmp.to = v.to
       tmp.username = v.from_user.username
+      tmp.avatar = v.from_user.avatar
       tmp.time = v.createdAt
       tmp.content = v.content
       msgArr.push(tmp)

@@ -2,7 +2,7 @@ import { Form, Icon, Input, Button, Radio } from 'antd'
 import styles from './styles'
 import PropTypes from 'prop-types'
 import React from 'react'
-import fetch from '$fetch'
+import avatarArr from '../assets/index'
 const FormItem = Form.Item
 import { connect } from 'react-redux'
 import * as userAction from '../action/user'
@@ -25,13 +25,10 @@ class Login extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
+    const random = Math.floor(Math.random() * 20)
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.login(Object.assign({}, values, this.state))
-        this.props.form.setFieldsValue({
-          userName: '',
-          password: ''
-        })
+        this.props.login(Object.assign({}, values, this.state, { avatar: random }))
       }
     })
   }
@@ -51,6 +48,7 @@ class Login extends React.Component {
       <div  className = { styles.login }>
         <Form className = { styles.login__form } onSubmit = { this.handleSubmit }>
         <h3 className = { styles.login__form__title }>欢迎来聊天室</h3>
+        <div className = { styles.login__form__img }><img src = { avatarArr[17] }/></div>
         <FormItem >
             <Radio.Group value = { action } onChange = { this.handleRadioChange }>
               <Radio.Button value = "login">登陆</Radio.Button>

@@ -24,10 +24,10 @@ class FriendController {
     let friendsArr = []
     if(userArr) {
       userArr.friends.forEach(v => {
-        v._friends && friendsArr.push({ id: v._friends.id, username: v._friends.username })
+        v._friends && friendsArr.push({ id: v._friends.id, username: v._friends.username, avatar: v._friends.avatar })
       })
       userArr._friends.forEach(v => {
-        v.friends && friendsArr.push({ id: v.friends.id, username: v.friends.username })
+        v.friends && friendsArr.push({ id: v.friends.id, username: v.friends.username, avatar: v.friends.avatar })
       })
     }
     return friendsArr

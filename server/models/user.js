@@ -16,6 +16,9 @@ export default sequelize.define('user', {
     type: Sequelize.STRING,
     allowNull: false
   },
+  avatar: {
+    type: Sequelize.STRING
+  },
   is_deleted: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
