@@ -90,7 +90,20 @@ class Content extends React.Component {
       }
     }, '')
   }
+
+  handleShowPicker = () => {
+    const { showPicker } = this.state
+    document.body.addEventListener('click', this.eventListener)
+    this.setState({ showPicker: !showPicker })
+  }
   
+  eventListener = (e) => {
+    if(this.pickerRef && !this.pickerRef.contains(e.target) && !this.faceRef.contains(e.target)) {
+      this.setState({ showPicker: false })
+      document.body.removeEventListener('click', this.listener)
+    }
+  }
+
   render() {
     const { showPicker } = this.state
     const { message, user, friends } = this.props
@@ -119,12 +132,9 @@ class Content extends React.Component {
       </div> : null }
       { hasSelected ? <div className = { styles.main__content__input }>
         <div className = { styles.main__content__input__toolbar }>
-          <div className = { styles.face } onClick = { () => this.setState({ showPicker: !showPicker }) }></div>
+          <div className = { styles.face } onClick = { this.handleShowPicker } ref = { ref => this.faceRef = ref }></div>
           { showPicker ? <div
-              tabIndex = { 1 }
-              onBlur = { () => { 
-                this.setState({ showPicker: false })
-              } }
+              ref = { ref => this.pickerRef = ref }
               className = { styles.tool }
                          >
           <Picker data = { data } showPreview = { false } className = { styles.smart } showSkinTones = { false }

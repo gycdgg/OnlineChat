@@ -33,7 +33,7 @@ class NaviHeader extends React.Component {
 
   openPop = () => {
     const { showPop } = this.state
-    document.body.addEventListener('click', (e) => this.listener(e))
+    document.body.addEventListener('click', this.listener)
     this.setState({ showPop: !showPop })
   }
 
