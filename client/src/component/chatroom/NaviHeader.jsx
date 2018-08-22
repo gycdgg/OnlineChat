@@ -3,20 +3,38 @@ import styles from './styles.styl'
 import fetch from '$fetch'
 import { Icon, message } from 'antd'
 import * as friendAction from '../../action/friend'
+import { logout } from '../../action/user'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 @connect(( user ) => ( user ), (dispatch) => ({
-  get_friend_list: (...args) => dispatch(friendAction.get_friend_list(...args)) 
+  get_friend_list: (...args) => dispatch(friendAction.get_friend_list(...args)),
+  logout: (...args) => dispatch(logout(...args))
 }))
 class NaviHeader extends React.Component {
   
   static propTypes = {
     user: PropTypes.object.isRequired,
-    get_friend_list: PropTypes.func.isRequired
+    get_friend_list: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired
   }
+
   state = {
     value: '',
-    searchResults: []
+    searchResults: [],
+    showPop: false
+  }
+
+  listener = (e) => {
+    if(this.popRef && !this.popRef.contains(e.target) && !this.setRef.contains(e.target)) {
+      this.setState({ showPop: false })
+      document.body.removeEventListener('click', this.listener)
+    }
+  }
+
+  openPop = () => {
+    const { showPop } = this.state
+    document.body.addEventListener('click', (e) => this.listener(e))
+    this.setState({ showPop: !showPop })
   }
 
   handleAdd = (id) => {
@@ -34,6 +52,7 @@ class NaviHeader extends React.Component {
       message.success('添加好友成功')
     })
   }
+
   handleInputChange = (e) => {
     this.setState({ value: e.target.value })
     e.target.value && fetch(`/api/users?name=${e.target.value}`).then(res => {
@@ -41,13 +60,19 @@ class NaviHeader extends React.Component {
     })
     !e.target.value && this.setState({ searchResults: [] })
   }
+
   render() {
     const { user } = this.props
-    const { value, searchResults } = this.state
+    const { value, searchResults, showPop } = this.state
     return <div className = { styles.naviHeader }>
     <div className = { styles.naviHeader__header }>    
       <div className = { styles.naviHeader__header__avatar }><img src = { `/avatar/img${user.avatar}.jpg` }/></div>
       <div className = { styles.naviHeader__header__info }>{ user.username }</div>
+      <div className = { styles.naviHeader__header__setting } onClick = { this.openPop } ref = { ref => this.setRef = ref }></div>
+      { showPop ? <div className = { styles.naviHeader__header__pop } ref = { ref => this.popRef = ref }>
+        <a onClick = { this.props.logout }><span  className = { styles.logout }></span>Log Out</a>
+        <a><span  className = { styles.sound }></span>Sound Off</a>
+      </div> : null }
     </div>
     <div className = { styles.naviHeader__search }>
       <i className = { styles.naviHeader__search__icon }></i>

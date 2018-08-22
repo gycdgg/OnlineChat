@@ -6,7 +6,7 @@ export default function message(state = initState.user, action) {
   case userAction.LOGIN_SUCCESS:
     return Object.assign({}, state, { isLogin: true }, action.payload, { pending: false })
   case userAction.LOGOUT_SUCCESS:
-    return state
+    return Object.assign({}, state, { isLogin: false })
   case userAction.LOGIN_FAILED:
     return Object.assign({}, state, { pending: false })
   case userAction.REGISTER_SUCCESS:

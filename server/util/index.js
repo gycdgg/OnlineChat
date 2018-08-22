@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 const config = {
   secret: 'edguan',
-  timeout: 1200000
+  timeout: 1000 * 60 * 60 * 5
 }
 
 /**
