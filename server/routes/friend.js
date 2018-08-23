@@ -1,5 +1,5 @@
-import { User, Friend } from '../models'
-import user from './user'
+import { User, Friend, User_group, Group } from '../models'
+import user from '../models/user'
 
 class FriendController {
   async _get(ctx) {
@@ -24,12 +24,24 @@ class FriendController {
     let friendsArr = []
     if(userArr) {
       userArr.friends.forEach(v => {
-        v._friends && friendsArr.push({ id: v._friends.id, username: v._friends.username, avatar: v._friends.avatar })
+        v._friends && friendsArr.push({ id: v._friends.id, username: v._friends.username, avatar: v._friends.avatar, type: 'friend' })
       })
       userArr._friends.forEach(v => {
-        v.friends && friendsArr.push({ id: v.friends.id, username: v.friends.username, avatar: v.friends.avatar })
+        v.friends && friendsArr.push({ id: v.friends.id, username: v.friends.username, avatar: v.friends.avatar, type: 'friend' })
       })
     }
+
+    const GroupArr = await User_group.findAll({
+      where: {
+        user_id: ctx.session.id
+      },
+      include: [
+        { model: Group, as: 'group_users' }
+      ]
+    })
+    GroupArr.forEach(v => {
+      friendsArr.push({ id: v.group_id, username: v.group_users.name, avatar: 15, type: 'group' })
+    })
     return friendsArr
   }
 

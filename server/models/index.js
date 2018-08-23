@@ -4,6 +4,7 @@ import Friend from './friend'
 import Message from './message'
 import Group from './group'
 import User_group from './user_group'
+import Orm from './orm'
 
 User.hasMany(Socket, { as: 'sockets', foreignKey: 'user_id', onDelete: 'cascade', hooks: true })
 Socket.belongsTo(User, { as: 'sockets', foreignKey: 'user_id', onDelete: 'cascade', hooks: true })
@@ -37,5 +38,6 @@ export {
   Friend,
   Message,
   User_group,
-  Group
+  Group,
+  Orm
 }

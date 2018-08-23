@@ -1,4 +1,4 @@
-import { User } from '../models'
+import { User, Orm, User_group, Group } from '../models'
 import { verifyToken } from '../util'
 import { Socket } from '../models'
 /**
@@ -76,4 +76,25 @@ const getSocketId = async (id) => {
   })
   return sockets.map(socket => socket && socket._id)
 }
-export  { normalizeResponse, checkAuth, getSocketId }
+
+/**
+ * 
+ * @param {object} data 
+ */
+const  createGroup = async (data) => {
+  const t = await Orm.transaction()
+  const localTransaction = { transaction: t }
+  try{
+    const group  = await Group.create({ name: data.name, desc: data.desc }, localTransaction)
+    const userArr = []
+    data.user.forEach(v => {
+      userArr.push({ user_id: v, group_id: group.id })
+    })
+    await User_group.bulkCreate(userArr, localTransaction)
+    await t.commit()
+  } catch(err) {
+    console.log(`create group error:${err}`)
+  }
+}
+
+export  { normalizeResponse, checkAuth, getSocketId, createGroup }

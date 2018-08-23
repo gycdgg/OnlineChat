@@ -5,8 +5,8 @@ import bodyParser from 'koa-bodyparser'
 import IO from 'socket.io'
 import http from 'http'
 import Static from 'koa-static'
-import path, { dirname } from 'path'
-import { checkAuth, getSocketId } from './middleware'
+import path from 'path'
+import { checkAuth, getSocketId, createGroup } from './middleware'
 import routes from './routes'
 import { Socket, Message } from './models'
 let app = new Koa()
@@ -48,6 +48,30 @@ io.use( async (socket, next) => {
   })
   await next()
 })
+
+io.use( async (socket, next) => {
+  socket.on('createGroup', async (data) => {
+    const { name, user, desc } = data
+    await createGroup({ name, desc, user })
+    user.forEach( async v => {
+      const socketIds = await getSocketId(v)
+      socketIds.forEach(socketId => {
+        console.log(`invite:${v}`)
+        io.to(socketId).emit('invite', data)
+      })
+    })
+    socket.join(name)
+  })
+  await next()
+})
+
+io.use( async (socket, next) => {
+  socket.on('join', async (data) => {
+    socket.join(data.name)
+  })
+  await next()
+})
+
 app.use( Static(path.join(__dirname, '../client/dist'), {
   maxAge: 365 * 24 * 60 * 60
 }))

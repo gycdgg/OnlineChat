@@ -8,7 +8,7 @@ export default function message(state = initState.friends, action) {
     return Object.assign({}, state, { list: action.payload })
   case friendAction.SELECT_FRIEND:
     return Object.assign({}, state, { selected: action.payload }, { list: state.list.map(v => {
-      if(v.id === action.payload.id) {
+      if(v.id === action.payload.id && v.type === action.payload.type) {
         v.unread = 0
       }
       return v

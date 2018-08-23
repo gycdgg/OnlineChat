@@ -8,7 +8,7 @@ export default function message(state = initState.message, action) {
   case messageAction.SEND_MESSAGE:
     return state
   case messageAction.INIT_MESSAGE_LIST:
-    return Object.assign({}, state, {list: action.payload})
+    return Object.assign({}, state, { list: action.payload })
   default: return state
   }
 }

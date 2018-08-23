@@ -50,7 +50,7 @@ class Login extends React.Component {
         <div className = { styles.login__form__img }><img src = { `/avatar/img${18}.jpg` }/></div>
         <FormItem >
             <Radio.Group value = { action } onChange = { this.handleRadioChange } buttonStyle = "solid" style = { { width: '100%' } }>
-              <Radio.Button value = "login" style = { { width: '50%', textAlign: 'center' } }>登陆</Radio.Button>
+              <Radio.Button value = "login" style = { { width: '50%', textAlign: 'center' } }>登录</Radio.Button>
               <Radio.Button value = "register"  style = { { width: '50%', textAlign: 'center' } }>注册</Radio.Button>
             </Radio.Group>
           </FormItem>
@@ -70,7 +70,7 @@ class Login extends React.Component {
           </FormItem>
           <FormItem>
             <Button className = { styles.login__form__submit } htmlType = "submit" type = "primary">
-              { action === 'login' ? '登陆' : '注册' } 
+              { action === 'login' ? '登录' : '注册' } 
             </Button>
           </FormItem>
         </Form>

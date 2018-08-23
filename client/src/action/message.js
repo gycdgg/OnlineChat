@@ -1,6 +1,7 @@
 import socket from '../socket'
 import notification from '../../util/notification'
 import fetch from '$fetch'
+import friend from '../../../server/models/friend'
 if (window.Notification && (window.Notification.permission === 'default' || window.Notification.permission === 'denied')) {
   window.Notification.requestPermission()
 }
@@ -18,7 +19,11 @@ const init_message_list = () => (dispatch) => fetch('/api/messages').then(res =>
  * before add listener , remove message listener first
  */
 const getMessage = () => (dispatch, getState) =>  {
-  socket.removeAllListeners(['message'])
+  socket.removeAllListeners([ 'message', 'invite' ])
+  socket.on('invite', (data) => {
+    console.log('receive invite from user:', data)
+    socket.emit('join', data)
+  })
   socket.on('message', (message) => {
     const { user, friends } = getState()
     if(message.from !== user.id && document.hidden ) {
@@ -27,7 +32,10 @@ const getMessage = () => (dispatch, getState) =>  {
       const content = message.content
       notification(title, content, icon)
     }
-    if(!(friends.selected && (friends.selected.id === message.from))) {
+    if(!(friends.selected && (friends.selected.id === message.from) && (friends.selected.type === 'friend'))) {
+      dispatch({ type: ADD_UNREAD, payload: message.from })
+    }
+    if(!(friends.selected && (friends.selected.id === message.group_id) && (friends.selected.type === 'group'))) {
       dispatch({ type: ADD_UNREAD, payload: message.from })
     }
     dispatch({ type: GET_MESSAGE, payload: message }) 

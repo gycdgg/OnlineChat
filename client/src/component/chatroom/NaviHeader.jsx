@@ -1,27 +1,34 @@
 import React from 'react'
 import styles from './styles.styl'
 import fetch from '$fetch'
-import { Icon, message } from 'antd'
+import { Icon, message, Modal, Checkbox, Col, Row, Input } from 'antd'
 import * as friendAction from '../../action/friend'
 import { logout } from '../../action/user'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import socket from '../../socket'
 @connect(( user ) => ( user ), (dispatch) => ({
   get_friend_list: (...args) => dispatch(friendAction.get_friend_list(...args)),
-  logout: (...args) => dispatch(logout(...args))
+  logout: (...args) => dispatch(logout(...args)),
+  create_group: (...args) => dispatch(friendAction.create_group(...args))
 }))
 class NaviHeader extends React.Component {
   
   static propTypes = {
     user: PropTypes.object.isRequired,
     get_friend_list: PropTypes.func.isRequired,
-    logout: PropTypes.func.isRequired
+    logout: PropTypes.func.isRequired,
+    friends: PropTypes.object.isRequired,
+    create_group: PropTypes.func.isRequired
   }
 
   state = {
     value: '',
     searchResults: [],
-    showPop: false
+    showPop: false,
+    showModal: false,
+    radioGroupValue: [],
+    groupName: ''
   }
 
   listener = (e) => {
@@ -61,9 +68,25 @@ class NaviHeader extends React.Component {
     !e.target.value && this.setState({ searchResults: [] })
   }
 
+  showModal = () => {
+    this.setState({
+      showModal: true,
+      showPop: false
+    })
+  }
+
+  onSelectUser = (e) => {
+    this.setState({ radioGroupValue: e })
+  }
+
+  handleOk = () => {
+    const { groupName: name, radioGroupValue: user } = this.state
+    this.props.create_group({ name, user: [ this.props.user.id, ...user ] }) 
+  }
+  
   render() {
-    const { user } = this.props
-    const { value, searchResults, showPop } = this.state
+    const { user, friends } = this.props
+    const { value, searchResults, showPop, showModal, radioGroupValue, groupName } = this.state
     return <div className = { styles.naviHeader }>
     <div className = { styles.naviHeader__header }>    
       <div className = { styles.naviHeader__header__avatar }><img src = { `/avatar/img${user.avatar}.jpg` }/></div>
@@ -72,8 +95,25 @@ class NaviHeader extends React.Component {
       { showPop ? <div className = { styles.naviHeader__header__pop } ref = { ref => this.popRef = ref }>
         <a onClick = { this.props.logout }><span  className = { styles.logout }></span>Log Out</a>
         <a><span  className = { styles.sound }></span>Sound Off</a>
+        <a onClick = { this.showModal }><span  className = { styles.sound }></span>Group Chat</a>
       </div> : null }
     </div>
+    <Modal
+        title = "建群"
+        visible = { showModal }
+        onOk = { this.handleOk }
+        onCancel = { () => this.setState({ showModal: false }) }
+        okText = "确认"
+        cancelText = "取消"
+    >
+        <Input value = { groupName } required onChange = { (e) => this.setState({ groupName: e.target.value }) }/>
+        <Checkbox.Group style = { { width: '100%' } } onChange = { this.onSelectUser } value = { radioGroupValue }>
+    <Row>
+      
+      { friends.list.map((v, i) => <Col span = { 8 } key = { i }><Checkbox value = { v.id }>{ v.username }</Checkbox></Col>) }
+    </Row>
+  </Checkbox.Group>,
+      </Modal>
     <div className = { styles.naviHeader__search }>
       <i className = { styles.naviHeader__search__icon }></i>
       <input value = { value }  className = { styles.naviHeader__search__input } onChange = { this.handleInputChange } placeholder = "Search"/>

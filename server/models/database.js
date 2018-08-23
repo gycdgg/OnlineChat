@@ -8,8 +8,7 @@ const databaseInfo = {
   underscored: true,
   timezone: '+08:00',
   dialectOptions: {
-    charset: "utf8mb4",
-    collate: "utf8mb4_unicode_ci",
+    charset: 'utf8mb4',
     supportBigNumbers: true,
     bigNumberStrings: true
   }

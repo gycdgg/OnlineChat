@@ -42,9 +42,11 @@ class Content extends React.Component {
 
   handleSumit = () => {
     const { user, friends } = this.props
-    console.log(this.state.inputValue.trim() === '')
     if(this.state.inputValue.trim() === '' || friends.selected.id == false) return
     const message = { username: user.username, avatar: user.avatar, from: user.id, to: friends.selected.id, time: new Date(), content: this.state.inputValue }
+    if( friends.selected.type === 'group') {
+      Object.assign(message, { group_id: friends.selected.id })
+    }
     this.props.sendMessage(message)
     this.setState({ inputValue: '' })
   }
@@ -108,9 +110,14 @@ class Content extends React.Component {
     const { showPicker } = this.state
     const { message, user, friends } = this.props
     const hasSelected = !!friends.selected.id
-    const friendMessage = message.list.filter(v => {
+    const isGroup = friends.selected.type === 'group'
+    
+    let friendMessage = message.list.filter(v => {
       return (user.id === v.from && friends.selected.id === v.to) || (user.id === v.to && friends.selected.id === v.from) 
     })
+    if(isGroup) {
+      friendMessage = message.list.filter(v => v.group_id === friends.selected.id)
+    }   
     return <div className = { styles.main__content }>
       <div className = { styles.main__content__title }>
         <div className = { styles.main__content__title__text }>{ friends.selected.username || null } </div>

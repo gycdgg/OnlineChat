@@ -12,7 +12,7 @@ const login = (user) => (dispatch) => fetch('/api/session', {
   body: user
 }).then(res => {
   if(user.action === 'login') {
-    message.success('登陆成功')
+    message.success('登录成功')
     dispatch({ type: LOGIN_SUCCESS, payload: res }) 
   } else {
     message.success('注册成功')

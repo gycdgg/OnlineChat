@@ -24,6 +24,7 @@ class MessageController {
       tmp.username = v.from_user.username
       tmp.avatar = v.from_user.avatar
       tmp.time = v.createdAt
+      tmp.group_id = v.group_id
       tmp.content = v.content
       msgArr.push(tmp)
     })
