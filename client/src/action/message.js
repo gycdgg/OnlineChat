@@ -12,9 +12,13 @@ const GET_MESSAGE = 'GET_MESSAGE'
 const ADD_UNREAD = 'ADD_UNREAD'
 const INIT_MESSAGE_LIST = 'INIT_MESSAGE_LIST'
 
-const init_message_list = () => (dispatch) => fetch('/api/messages').then(res=> dispatch({type: INIT_MESSAGE_LIST, payload: res}))
+const init_message_list = () => (dispatch) => fetch('/api/messages').then(res => dispatch({ type: INIT_MESSAGE_LIST, payload: res }))
 
+/**
+ * before add listener , remove message listener first
+ */
 const getMessage = () => (dispatch, getState) =>  {
+  socket.removeAllListeners(['message'])
   socket.on('message', (message) => {
     const { user, friends } = getState()
     if(message.from !== user.id && document.hidden ) {
