@@ -19,7 +19,9 @@ const init_message_list = () => (dispatch) => fetch('/api/messages').then(res =>
  * before add listener , remove listener first
  */
 const getMessage = () => (dispatch, getState) =>  {
-  socket.removeAllListeners([ 'message', 'invite', 'joinSuccess' ])
+  socket.removeAllListeners([ 'message' ])
+  socket.removeAllListeners([ 'joinSuccess' ])
+  socket.removeAllListeners([ 'invite' ])
   socket.on('invite', (data) => {
     socket.emit('join', data)
   })

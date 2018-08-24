@@ -98,7 +98,7 @@ class NaviHeader extends React.Component {
       { showPop ? <div className = { styles.naviHeader__header__pop } ref = { ref => this.popRef = ref }>
         <a onClick = { this.props.logout }><span  className = { styles.logout }></span>Log Out</a>
         <a><span  className = { styles.sound }></span>Sound Off</a>
-        <a onClick = { this.showModal }><span  className = { styles.sound }></span>Group Chat</a>
+        <a onClick = { this.showModal }><span  className = { styles.group }></span>Group Chat</a>
       </div> : null }
     </div>
     <Modal
