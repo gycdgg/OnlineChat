@@ -81,7 +81,10 @@ class NaviHeader extends React.Component {
 
   handleOk = () => {
     const { groupName: name, radioGroupValue: user } = this.state
-    this.props.create_group({ name, user: [ this.props.user.id, ...user ] }) 
+    this.props.create_group({ name, user: [ this.props.user.id, ...user ] })
+    this.setState({
+      showModal: false
+    })
   }
   
   render() {
@@ -110,7 +113,7 @@ class NaviHeader extends React.Component {
         <Checkbox.Group style = { { width: '100%' } } onChange = { this.onSelectUser } value = { radioGroupValue }>
     <Row>
       
-      { friends.list.map((v, i) => <Col span = { 8 } key = { i }><Checkbox value = { v.id }>{ v.username }</Checkbox></Col>) }
+      { friends.list.map((v, i) => v.type === 'friend' && <Col span = { 8 } key = { i }><Checkbox value = { v.id }>{ v.username }</Checkbox></Col>) }
     </Row>
   </Checkbox.Group>,
       </Modal>

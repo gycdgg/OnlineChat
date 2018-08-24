@@ -40,7 +40,7 @@ class FriendController {
       ]
     })
     GroupArr.forEach(v => {
-      friendsArr.push({ id: v.group_id, username: v.group_users.name, avatar: 15, type: 'group' })
+      friendsArr.push({ id: v.group_id, username: v.group_users.name, avatar: 21, type: 'group' })
     })
     return friendsArr
   }

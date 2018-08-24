@@ -15,11 +15,13 @@ export default function message(state = initState.friends, action) {
     }) })
   case messageAction.ADD_UNREAD:
     return Object.assign({}, state, { list: state.list.map(v => {
-      if(v.id === action.payload) {
+      if(v.id === action.payload.id && action.payload.type === v.type) {
         v.unread++
       }
       return v
     }) } )
+  case friendAction.ADD_FRIEND:
+    return Object.assign({}, state, { list: [ action.payload ].concat(state.list) })
   default: return state
   }
 }

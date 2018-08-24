@@ -1,7 +1,7 @@
 import socket from '../socket'
 import notification from '../../util/notification'
 import fetch from '$fetch'
-import friend from '../../../server/models/friend'
+import { ADD_FRIEND } from './friend'
 if (window.Notification && (window.Notification.permission === 'default' || window.Notification.permission === 'denied')) {
   window.Notification.requestPermission()
 }
@@ -16,13 +16,16 @@ const INIT_MESSAGE_LIST = 'INIT_MESSAGE_LIST'
 const init_message_list = () => (dispatch) => fetch('/api/messages').then(res => dispatch({ type: INIT_MESSAGE_LIST, payload: res }))
 
 /**
- * before add listener , remove message listener first
+ * before add listener , remove listener first
  */
 const getMessage = () => (dispatch, getState) =>  {
-  socket.removeAllListeners([ 'message', 'invite' ])
+  socket.removeAllListeners([ 'message', 'invite', 'joinSuccess' ])
   socket.on('invite', (data) => {
-    console.log('receive invite from user:', data)
     socket.emit('join', data)
+  })
+  socket.on('joinSuccess', data => {
+    console.log('join success', data)
+    dispatch({ type: ADD_FRIEND, payload: data })
   })
   socket.on('message', (message) => {
     const { user, friends } = getState()
@@ -32,12 +35,16 @@ const getMessage = () => (dispatch, getState) =>  {
       const content = message.content
       notification(title, content, icon)
     }
-    if(!(friends.selected && (friends.selected.id === message.from) && (friends.selected.type === 'friend'))) {
-      dispatch({ type: ADD_UNREAD, payload: message.from })
+    if(message.group_id) {
+      if(friends.selected.id === undefined || (friends.selected.id !== message.group_id && friends.selected.type === 'group')) {
+        dispatch({ type: ADD_UNREAD, payload: { id: message.group_id, type: 'group' } })
+      }
+    } else {
+      if( friends.selected.id === undefined || (friends.selected.id !== message.from && friends.selected.type === 'friend')) {
+        dispatch({ type: ADD_UNREAD, payload: { id: message.from, type: 'friend' } })
+      }
     }
-    if(!(friends.selected && (friends.selected.id === message.group_id) && (friends.selected.type === 'group'))) {
-      dispatch({ type: ADD_UNREAD, payload: message.from })
-    }
+
     dispatch({ type: GET_MESSAGE, payload: message }) 
   } )
 }

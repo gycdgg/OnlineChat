@@ -34,7 +34,7 @@ class Navi extends React.Component {
       if(type) {
         return v.group_id === id
       } else {
-        return v.from === id || v.to === id
+        return (v.from === id || v.to === id) && (!v.group_id)
       }
     })
     const len = targetArr.length
@@ -52,7 +52,8 @@ class Navi extends React.Component {
       <div className = { styles.header }>
         <NaviHeader/>
       </div>
-      <div className = { styles.content }>
+      <div className = { styles.content + ' ' + styles.main__content__messages }>
+        <div className = { styles.scrollWrapper }>
         {
           friends.list.map((v, i) => <div className = { styles.content__chatContact + ' ' + (selectedId === v.id && selectedType === v.type ? styles.content__active : '') } onClick = { () => this.props.select_friend(v) } key = { i }>
           <div className = { styles.content__chatContact__avatar }>
@@ -67,6 +68,7 @@ class Navi extends React.Component {
           </div>
         </div>)
         }
+        </div>
       </div>
     </div>
   }

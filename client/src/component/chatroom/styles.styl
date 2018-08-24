@@ -210,6 +210,11 @@
 
 .content
   width: 100%
+  overflow: auto
+  height: 640px
+  padding: 0
+  .scrollWrapper :first-child
+    margin-top 0px !important 
   &__chatContact
     cursor pointer
     overflow: hidden;
@@ -271,7 +276,7 @@
       border: 1px solid #d6d6d6
       position: absolute
       width: 180px
-      height: 103px
+      height: 155px
       background-color: transparent
       border-radius: 3px
       outline: none 
@@ -301,6 +306,8 @@
         background-position: -102px -398px
       .sound
         background-position: -170px -398px
+      .group
+        background-position: 0px -398px
     &__avatar
       display inline-block
       height 40px

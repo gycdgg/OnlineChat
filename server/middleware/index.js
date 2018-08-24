@@ -92,6 +92,7 @@ const  createGroup = async (data) => {
     })
     await User_group.bulkCreate(userArr, localTransaction)
     await t.commit()
+    return group
   } catch(err) {
     console.log(`create group error:${err}`)
   }

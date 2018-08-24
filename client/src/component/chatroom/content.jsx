@@ -111,13 +111,12 @@ class Content extends React.Component {
     const { message, user, friends } = this.props
     const hasSelected = !!friends.selected.id
     const isGroup = friends.selected.type === 'group'
-    
     let friendMessage = message.list.filter(v => {
-      return (user.id === v.from && friends.selected.id === v.to) || (user.id === v.to && friends.selected.id === v.from) 
+      return (v.group_id == null) && ((user.id === v.from && friends.selected.id === v.to) || (user.id === v.to && friends.selected.id === v.from))
     })
     if(isGroup) {
       friendMessage = message.list.filter(v => v.group_id === friends.selected.id)
-    }   
+    } 
     return <div className = { styles.main__content }>
       <div className = { styles.main__content__title }>
         <div className = { styles.main__content__title__text }>{ friends.selected.username || null } </div>

@@ -8,7 +8,7 @@ import Static from 'koa-static'
 import path from 'path'
 import { checkAuth, getSocketId, createGroup } from './middleware'
 import routes from './routes'
-import { Socket, Message } from './models'
+import { Socket, Message, Group } from './models'
 let app = new Koa()
 const server = http.createServer(app.callback())
 
@@ -34,17 +34,22 @@ io.on('connection', async (socket) => {
 io.use( async (socket, next) => {
   socket.on('message', async (data) => {
     const { from, to } = data
-    await Message.create(data)
-    console.log('message data', data)
-    const socketIds = await getSocketId(to)
-    const _socketIds = await getSocketId(from)
-    if(socketIds.length >= 1) {
-      socketIds.forEach(socketId => {
-        console.log('from : to', from, to, socketId, socketIds)
-        io.to(socketId).emit('message', data)
-      })
+    if(data.group_id) {
+      await Message.create(Object.assign({}, data, { to: null }))
+      const groupDetail = await Group.findById(data.group_id)
+      io.sockets.in(groupDetail.name).emit('message', data)
+    } else {
+      await Message.create(data)
+      const socketIds = await getSocketId(to)
+      const _socketIds = await getSocketId(from)
+      if(socketIds.length >= 1) {
+        socketIds.forEach(socketId => {
+          console.log('from : to', from, to, socketId, socketIds)
+          io.to(socketId).emit('message', data)
+        })
+      }
+      _socketIds.forEach((_socketId) => io.to(_socketId).emit('message', data))
     }
-    _socketIds.forEach((_socketId) => io.to(_socketId).emit('message', data))
   })
   await next()
 })
@@ -52,22 +57,29 @@ io.use( async (socket, next) => {
 io.use( async (socket, next) => {
   socket.on('createGroup', async (data) => {
     const { name, user, desc } = data
-    await createGroup({ name, desc, user })
+    const groupDetail = await createGroup({ name, desc, user })
     user.forEach( async v => {
       const socketIds = await getSocketId(v)
       socketIds.forEach(socketId => {
-        console.log(`invite:${v}`)
         io.to(socketId).emit('invite', data)
+        io.to(socketId).emit('joinSuccess', {
+          id: groupDetail.id,
+          username: name,
+          desc,
+          type: 'group',
+          avatar: 21,
+          unread: 0
+        })
       })
     })
-    socket.join(name)
   })
   await next()
 })
 
 io.use( async (socket, next) => {
   socket.on('join', async (data) => {
-    socket.join(data.name)
+    console.log('join', data)
+    socket.join(data.name || data.username)
   })
   await next()
 })
