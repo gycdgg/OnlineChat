@@ -1,15 +1,24 @@
-import { User, Socket, Message } from '../models'
+import { User, Socket, Message, User_group } from '../models'
 import { signToken } from '../util'
 
 class MessageController {
   async _get(ctx) {
     const userId = ctx.session.id
+    const groups = await User_group.findAll({
+      where: {
+        user_id: userId
+      }
+    })
+    const groupsArr = groups.map(v => v.group_id)
     let msgArr = []
     const messages = await Message.findAll({
       where: {
         $or: [
           { from: userId },
-          { to: userId }
+          { to: userId },
+          { group_id: {
+            $in: groupsArr
+          } }
         ]
       },
       include: [
