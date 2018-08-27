@@ -6,7 +6,6 @@ import * as friendAction from '../../action/friend'
 import { logout } from '../../action/user'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import socket from '../../socket'
 @connect(( user ) => ( user ), (dispatch) => ({
   get_friend_list: (...args) => dispatch(friendAction.get_friend_list(...args)),
   logout: (...args) => dispatch(logout(...args)),

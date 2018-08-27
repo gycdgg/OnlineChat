@@ -143,8 +143,10 @@
         height 40px
         padding 5px 17px
         position relative
+        text-align:  left 
         .face
           width 30px
+          display inline-block
           height 30px
           background url("../../assets/sprint.png") no-repeat
           background-position: -404px -398px
@@ -154,6 +156,21 @@
           position absolute
           top -320px
           transition: all 0.3s
+        .file
+          margin-left: 10px
+          display inline-block
+          width 30px
+          height 30px
+          background url("../../assets/sprint.png") no-repeat
+          background-position: -118px -432px
+          background-size: 487px 462px
+          cursor pointer
+          vertical-align: top
+          input
+            opacity 0
+            cursor pointer
+          &::-webkit-file-upload-button
+            cursor: pointer
       textarea
         background-color  #eee
         padding  0 10px

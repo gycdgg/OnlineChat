@@ -8,6 +8,7 @@ import Static from 'koa-static'
 import path from 'path'
 import { checkAuth, getSocketId, createGroup } from './middleware'
 import routes from './routes'
+import send from 'koa-send'
 import { Socket, Message, Group } from './models'
 let app = new Koa()
 const server = http.createServer(app.callback())
@@ -37,14 +38,13 @@ io.use( async (socket, next) => {
     if(data.group_id) {
       await Message.create(Object.assign({}, data, { to: null }))
       const groupDetail = await Group.findById(data.group_id)
-      io.sockets.in(groupDetail.name).emit('message', data)
+      io.sockets.in(groupDetail.name + groupDetail.id).emit('message', data)
     } else {
       await Message.create(data)
       const socketIds = await getSocketId(to)
       const _socketIds = await getSocketId(from)
       if(socketIds.length >= 1) {
         socketIds.forEach(socketId => {
-          console.log('from : to', from, to, socketId, socketIds)
           io.to(socketId).emit('message', data)
         })
       }
@@ -79,7 +79,7 @@ io.use( async (socket, next) => {
 io.use( async (socket, next) => {
   socket.on('join', async (data) => {
     console.log('join', data)
-    socket.join(data.name || data.username)
+    socket.join(data.name || data.username + data.id)
   })
   await next()
 })
@@ -96,6 +96,16 @@ app.use(async (ctx, next) => {
   await next()
   ctx.set('X-Powered-By', 'Koa2')
 })
+
+app
+  .use(async (ctx, next) => {
+    if(ctx.path.startsWith('/static')) {
+      let rest = ctx.path.replace('/static', '')
+      await send(ctx, rest, { root: path.join(__dirname, './static') })
+    }
+    await next()
+  })
+
 app.use( checkAuth ())
   .use(async (ctx, next) => {
     const start = new Date()

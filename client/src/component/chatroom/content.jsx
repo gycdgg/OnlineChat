@@ -7,6 +7,8 @@ import moment from 'moment'
 import 'emoji-mart/css/emoji-mart.css'
 import data from 'emoji-mart/data/messenger.json'
 import { Picker, Emoji, NimbleEmojiIndex  } from 'emoji-mart'
+import 'whatwg-fetch'
+
 let emojiIndex = new NimbleEmojiIndex(data)
 @connect(({ message, user, friends }) => ({ message, user, friends }), (dispatch) => ({
   getMessage: (...args) => {
@@ -37,8 +39,13 @@ class Content extends React.Component {
 
   componentDidMount() {
     // register a socket to receive message
+    //this.props.friends.selected && this.props.friends.selected.type === 'group' && this.getGroupUser()
     this.props.getMessage()
   }
+
+  // getGroupUser = () => {
+
+  // }
 
   handleSumit = () => {
     const { user, friends } = this.props
@@ -76,7 +83,6 @@ class Content extends React.Component {
   }
   
   handleEmojiSelect = (e) => {
-    console.log(e)
     this.setState({ inputValue: this.state.inputValue + `EMJ${e.id}EMJ` })
     this.setState({ showPicker: false })
   }
@@ -106,6 +112,29 @@ class Content extends React.Component {
     }
   }
 
+  // only group chat should show user list
+  showUser = () => {
+    const shouldShow = this.props.friends.selected && this.props.friends.selected.type === 'group'
+  }
+
+  handleUpload = () => {
+    const { user, friends } = this.props
+    let formData = new FormData()
+    let file = this.file.files[0]
+    formData.append('file', file)
+    fetch('/api/uploads', {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json()).then(res => {
+      const message = { username: user.username, avatar: user.avatar, from: user.id, to: friends.selected.id, time: new Date(), content: `file${res.url}file` }
+      if( friends.selected.type === 'group') {
+        Object.assign(message, { group_id: friends.selected.id })
+      }
+      this.props.sendMessage(message)
+    })
+  }
+
+  isFile = (str) => str.startsWith('file') && str.endsWith('file')
   render() {
     const { showPicker } = this.state
     const { message, user, friends } = this.props
@@ -131,7 +160,7 @@ class Content extends React.Component {
         <div className = { styles.scrollWrapper }>
           { friendMessage.map((v, i, arr) => <div key = { i } className = { user.id === v.from ? styles.main__content__messages__right :  styles.main__content__messages__left }>
           { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
-          <span className = { `${styles.main__content__messages__item} ${styles.content_left}` }><pre>{ v.content.split('EMJ').map((v, i) => i % 2 ? <Emoji emoji = { { id: v, skin: 3 } } size = { 16 } /> : v) }</pre></span>
+          <span className = { `${styles.main__content__messages__item} ${styles.content_left}` }><pre>{ this.isFile(v.content) ? <img src = { v.content.split('file')[1] }/> :  v.content.split('EMJ').map((v, i) => i % 2 ? <Emoji emoji = { { id: v, skin: 3 } } size = { 16 } /> : v) }</pre></span>
           <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }><img src = { `/avatar/img${v.avatar}.jpg` }/></span>
           </div>) }
         </div>
@@ -147,6 +176,9 @@ class Content extends React.Component {
               onSelect = { (e) => this.handleEmojiSelect(e) }
           />
           </div> : null }
+          <div className = { styles.file } >
+            <input type = "file" onChange = { this.handleUpload } ref = { ref => this.file = ref }/>
+          </div>
         </div>
         <textarea 
             autoFocus
