@@ -3,10 +3,8 @@ import userController from './user'
 import friendsController from './friend'
 import messageController from './message'
 import Router from 'koa-router'
-import multiparty from 'koa2-multiparty'
+import path from 'path'
 import fs from 'fs'
-import { Message } from '../models'
-import { getSocketId } from '../middleware'
 const router = Router()
 /**
  * check login status and get user info
@@ -29,15 +27,19 @@ router.get('/api/users', normalizeResponse(userController.find))
 
 router.get('/api/messages', normalizeResponse(messageController._get))
 
-router.post('/api/uploads', multiparty(), async (ctx) => {
+router.post('/api/uploads', async (ctx) => {
   try{
+    const file = ctx.request.files[0]
     let hash = randomChar(9)
-    let filename = ctx.req.files.file.originalFilename || path.basename(ctx.req.files.file.path)
+    let filename = file.originalFilename || path.basename(file.path)
     let targetPath = `./static/uploads/${hash}${filename}`
-    await fs.createReadStream(ctx.req.files.file.path).pipe(fs.createWriteStream(targetPath))
+    await fs.createReadStream(file.path).pipe(fs.createWriteStream(targetPath))
+    console.timeEnd('server')
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>end')
     ctx.body = {
       url: `${ctx.headers.origin}/static/uploads/${hash}${filename}`
     }
+
   }catch(error) {
     console.log('error', error)
   }

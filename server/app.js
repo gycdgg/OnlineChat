@@ -7,6 +7,7 @@ import http from 'http'
 import Static from 'koa-static'
 import path from 'path'
 import { checkAuth, getSocketId, createGroup } from './middleware'
+import body from 'koa-better-body'
 import routes from './routes'
 import send from 'koa-send'
 import { Socket, Message, Group } from './models'
@@ -83,12 +84,16 @@ io.use( async (socket, next) => {
   })
   await next()
 })
-
+app.use( async (ctx, next) => {
+  console.log('>>>>>>>>>>>>>>>>>>>>>>enter server')
+  console.time('server')
+  await next()
+})
 app.use( Static(path.join(__dirname, '../client/dist'), {
   maxAge: 365 * 24 * 60 * 60
 }))
 app.use(convert(logger()))
-app.use(bodyParser())
+app.use(body())
 // insert socket into ctx
 app.use(async (ctx, next) => {
   ctx._socket = _socket

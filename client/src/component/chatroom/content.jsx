@@ -122,10 +122,12 @@ class Content extends React.Component {
     let formData = new FormData()
     let file = this.file.files[0]
     formData.append('file', file)
+    console.time('upload')
     fetch('/api/uploads', {
       method: 'POST',
       body: formData
     }).then(res => res.json()).then(res => {
+      console.timeEnd('upload')
       const message = { username: user.username, avatar: user.avatar, from: user.id, to: friends.selected.id, time: new Date(), content: `file${res.url}file` }
       if( friends.selected.type === 'group') {
         Object.assign(message, { group_id: friends.selected.id })
