@@ -1,6 +1,5 @@
-import { User, Orm, User_group, Group } from '../models'
+import { User, Orm, User_group, Group, Socket } from '../models'
 import { verifyToken } from '../util'
-import { Socket } from '../models'
 /**
  * normalize response
  * for admin api, should be authed
@@ -47,14 +46,21 @@ const checkAuth = () => async (ctx, next) => {
     if (id) {
       let userInfo = await User.findById(id)
       if(userInfo) {
-        await Socket.update(
-          { user_id: userInfo.id },
-          {
-            where: {
-              _id: ctx._socket.id
-            }
+        let socketDetail = await Socket.findOne({
+          where: {
+            user_id: id
           }
-        )
+        })
+        if(!(socketDetail && socketDetail._id)) {
+          await Socket.update(
+            { user_id: userInfo.id },
+            {
+              where: {
+                _id: ctx._socket.id
+              }
+            }
+          )
+        }
         ctx.session = {}
         ctx.session.id = id
 

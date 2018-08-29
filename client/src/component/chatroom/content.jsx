@@ -8,7 +8,7 @@ import 'emoji-mart/css/emoji-mart.css'
 import data from 'emoji-mart/data/messenger.json'
 import { Picker, Emoji, NimbleEmojiIndex  } from 'emoji-mart'
 import 'whatwg-fetch'
-
+import { randomChar } from '../../../util'
 let emojiIndex = new NimbleEmojiIndex(data)
 @connect(({ message, user, friends }) => ({ message, user, friends }), (dispatch) => ({
   getMessage: (...args) => {
@@ -19,7 +19,8 @@ let emojiIndex = new NimbleEmojiIndex(data)
   },
   checkAuth: (...args) => {
     dispatch(checkAuth(...args))
-  }
+  },
+  add_self_message: (...args) => dispatch(messageActions.add_self_message(...args))
 }))
 
 class Content extends React.Component {
@@ -29,7 +30,8 @@ class Content extends React.Component {
     user: PropTypes.object.isRequired,
     friends: PropTypes.object.isRequired,
     getMessage: PropTypes.func.isRequired,
-    sendMessage: PropTypes.func.isRequired
+    sendMessage: PropTypes.func.isRequired,
+    add_self_message: PropTypes.func.isRequired
   }
 
   state = {
@@ -118,21 +120,27 @@ class Content extends React.Component {
   }
 
   handleUpload = () => {
+    let str = randomChar(9)
     const { user, friends } = this.props
+    const message = { username: user.username, avatar: user.avatar, from: user.id, to: friends.selected.id, time: new Date(), tag: str }
     let formData = new FormData()
     let file = this.file.files[0]
+    let reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = (e)  => {
+      this.props.add_self_message({ ...message, content: `file${e.target.result}file`, pending: true })
+    }
+
     formData.append('file', file)
-    console.time('upload')
     fetch('/api/uploads', {
       method: 'POST',
       body: formData
     }).then(res => res.json()).then(res => {
-      console.timeEnd('upload')
-      const message = { username: user.username, avatar: user.avatar, from: user.id, to: friends.selected.id, time: new Date(), content: `file${res.url}file` }
+      const _message = {  ...message, content: `file${res.url}file` }
       if( friends.selected.type === 'group') {
-        Object.assign(message, { group_id: friends.selected.id })
+        Object.assign(_message, { group_id: friends.selected.id })
       }
-      this.props.sendMessage(message)
+      this.props.sendMessage(_message, false)
     })
   }
 
@@ -162,7 +170,12 @@ class Content extends React.Component {
         <div className = { styles.scrollWrapper }>
           { friendMessage.map((v, i, arr) => <div key = { i } className = { user.id === v.from ? styles.main__content__messages__right :  styles.main__content__messages__left }>
           { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
-          <span className = { `${styles.main__content__messages__item} ${styles.content_left}` }><pre>{ this.isFile(v.content) ? <img src = { v.content.split('file')[1] }/> :  v.content.split('EMJ').map((v, i) => i % 2 ? <Emoji emoji = { { id: v, skin: 3 } } size = { 16 } /> : v) }</pre></span>
+          <span className = { `${styles.main__content__messages__item} ${styles.content_left} ${ this.isFile(v.content) ? styles.content_file : ''}` }>
+            <pre>
+              { v.pending ? <p className = { styles.pending }><img src = { '/avatar/pending.gif' }/></p> : null }
+              { this.isFile(v.content) ? <img src = { v.content.split('file')[1] } />  :  v.content.split('EMJ').map((v, i) => i % 2 ? <Emoji emoji = { { id: v, skin: 3 } } size = { 16 } /> : v) }
+            </pre>
+          </span>
           <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }><img src = { `/avatar/img${v.avatar}.jpg` }/></span>
           </div>) }
         </div>

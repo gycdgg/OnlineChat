@@ -12,6 +12,8 @@ const SEND_MESSAGE = 'SEND_MESSAGE'
 const GET_MESSAGE = 'GET_MESSAGE'
 const ADD_UNREAD = 'ADD_UNREAD'
 const INIT_MESSAGE_LIST = 'INIT_MESSAGE_LIST'
+const ADD_SELF_MESSAGE = 'ADD_SELF_MESSAGE'
+const UPDATE_SELF_MESSAGE = 'UPDATE_SELF_MESSAGE'
 
 const init_message_list = () => (dispatch) => fetch('/api/messages').then(res => dispatch({ type: INIT_MESSAGE_LIST, payload: res }))
 
@@ -42,25 +44,40 @@ const getMessage = () => (dispatch, getState) =>  {
         dispatch({ type: ADD_UNREAD, payload: { id: message.group_id, type: 'group' } })
       }
     } else {
-      if( friends.selected.id === undefined || (friends.selected.id !== message.from && friends.selected.type === 'friend')) {
+      if( friends.selected.id === undefined || (friends.selected.id !== message.from && friends.selected.type === 'friend') || friends.selected.type === 'group') {
         dispatch({ type: ADD_UNREAD, payload: { id: message.from, type: 'friend' } })
       }
     }
-
     dispatch({ type: GET_MESSAGE, payload: message }) 
   } )
 }
 
-const sendMessage = (message) => () => {
+/**
+ * 
+ * @param {object} message 
+ * @param {bool} addself
+ * if myself is true, just add a iten ib message list
+ * else update the message stating, pending: true => false
+ */
+const sendMessage = (message, addself = true) => (dispatch) => {
   socket.emit('message', message)
+  if(addself) { 
+    dispatch({ type: ADD_SELF_MESSAGE, payload: message }) 
+  } else {
+    dispatch({ type: UPDATE_SELF_MESSAGE, payload: message.tag })
+  }
 }
 
+const add_self_message = (message) => (dispatch) => dispatch({ type: ADD_SELF_MESSAGE, payload: message })
 export {
   ADD_UNREAD,
   SEND_MESSAGE,
   GET_MESSAGE,
   INIT_MESSAGE_LIST,
+  ADD_SELF_MESSAGE,
+  UPDATE_SELF_MESSAGE,
   getMessage,
   sendMessage,
-  init_message_list
+  init_message_list,
+  add_self_message
 }

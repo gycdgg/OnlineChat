@@ -3,7 +3,7 @@ import userController from './user'
 import friendsController from './friend'
 import messageController from './message'
 import Router from 'koa-router'
-import path from 'path'
+import multiparty from 'koa2-multiparty'
 import fs from 'fs'
 const router = Router()
 /**
@@ -27,19 +27,15 @@ router.get('/api/users', normalizeResponse(userController.find))
 
 router.get('/api/messages', normalizeResponse(messageController._get))
 
-router.post('/api/uploads', async (ctx) => {
+router.post('/api/uploads', multiparty(), async (ctx) => {
   try{
-    const file = ctx.request.files[0]
     let hash = randomChar(9)
-    let filename = file.originalFilename || path.basename(file.path)
+    let filename = ctx.req.files.file.originalFilename || path.basename(ctx.req.files.file.path)
     let targetPath = `./static/uploads/${hash}${filename}`
-    await fs.createReadStream(file.path).pipe(fs.createWriteStream(targetPath))
-    console.timeEnd('server')
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>end')
+    await fs.createReadStream(ctx.req.files.file.path).pipe(fs.createWriteStream(targetPath))
     ctx.body = {
       url: `${ctx.headers.origin}/static/uploads/${hash}${filename}`
     }
-
   }catch(error) {
     console.log('error', error)
   }
@@ -54,4 +50,5 @@ const randomChar = (l) =>  {
   }
   return  timestamp + tmp
 }
+
 export default router
