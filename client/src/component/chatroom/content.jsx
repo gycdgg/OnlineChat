@@ -9,6 +9,7 @@ import data from 'emoji-mart/data/messenger.json'
 import { Picker, Emoji, NimbleEmojiIndex  } from 'emoji-mart'
 import 'whatwg-fetch'
 import { randomChar } from '../../../util'
+moment.locale('zh_cn')
 let emojiIndex = new NimbleEmojiIndex(data)
 @connect(({ message, user, friends }) => ({ message, user, friends }), (dispatch) => ({
   getMessage: (...args) => {
@@ -145,6 +146,23 @@ class Content extends React.Component {
   }
 
   isFile = (str) => str.startsWith('file') && str.endsWith('file')
+
+  timeRender = (time) => {
+    time = new Date(time)
+    let cur = new Date()
+    let timeStamp = new Date(cur.setHours(0, 0, 0, 0))
+    let prefix = moment(time).format('ah:mm')
+    if( timeStamp - time.getTime() > (7 * 24 * 60 * 60 * 1000)) {
+      return moment(time).format('YYYY年MMMDo') + ' ' + prefix
+    }
+    if(timeStamp - time.getTime() > (1 * 24 * 60 * 60 * 1000)) {
+      return moment(time).format('dddd')  + ' ' + prefix
+    }
+    if(timeStamp - time.getTime() < (1 * 24 * 60 * 60 * 1000) &&  timeStamp > time.getTime()) {
+      return '昨天' + ' ' + prefix
+    }
+    return prefix
+  }
   render() {
     const { showPicker } = this.state
     const { message, user, friends } = this.props
@@ -169,7 +187,7 @@ class Content extends React.Component {
       { hasSelected ? <div className = { styles.main__content__messages } ref = { (e) => this.getDom(e) }>
         <div className = { styles.scrollWrapper }>
           { friendMessage.map((v, i, arr) => <div key = { i } className = { user.id === v.from ? styles.main__content__messages__right :  styles.main__content__messages__left }>
-          { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ moment(v.time).format('HH:mm:ss') }</span></div> : null }
+          { this.showTime(v, i, arr) ? <div className = { styles.main__content__messages__time }> <span>{ this.timeRender(v.time) }</span></div> : null }
           <span className = { `${styles.main__content__messages__item} ${styles.content_left} ${ this.isFile(v.content) ? styles.content_file : ''}` }>
             <pre>
               { v.pending ? <p className = { styles.pending }><img src = { '/avatar/pending.gif' }/></p> : null }

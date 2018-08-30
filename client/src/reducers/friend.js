@@ -22,6 +22,10 @@ export default function message(state = initState.friends, action) {
     }) } )
   case friendAction.ADD_FRIEND:
     return Object.assign({}, state, { list: [ action.payload ].concat(state.list) })
+  case messageAction.SORT_FRIEND:
+    return Object.assign({}, state, {
+      list: [ ...state.list.filter(v => v.type === action.payload.type && v.id === action.payload.id), ...state.list.filter(v => !(v.type === action.payload.type && v.id === action.payload.id)) ] }
+    )
   default: return state
   }
 }

@@ -11,6 +11,7 @@ const icon = 'https://avatars0.githubusercontent.com/u/22490202?s=400&u=221ae40f
 const SEND_MESSAGE = 'SEND_MESSAGE'
 const GET_MESSAGE = 'GET_MESSAGE'
 const ADD_UNREAD = 'ADD_UNREAD'
+const SORT_FRIEND = 'SORT_FRIEND'
 const INIT_MESSAGE_LIST = 'INIT_MESSAGE_LIST'
 const ADD_SELF_MESSAGE = 'ADD_SELF_MESSAGE'
 const UPDATE_SELF_MESSAGE = 'UPDATE_SELF_MESSAGE'
@@ -42,10 +43,12 @@ const getMessage = () => (dispatch, getState) =>  {
     if(message.group_id) {
       if(friends.selected.id === undefined || (friends.selected.id !== message.group_id && friends.selected.type === 'group')) {
         dispatch({ type: ADD_UNREAD, payload: { id: message.group_id, type: 'group' } })
+        dispatch({ type: SORT_FRIEND, payload: { id: message.group_id, type: 'group' } })
       }
     } else {
       if( friends.selected.id === undefined || (friends.selected.id !== message.from && friends.selected.type === 'friend') || friends.selected.type === 'group') {
         dispatch({ type: ADD_UNREAD, payload: { id: message.from, type: 'friend' } })
+        dispatch({ type: SORT_FRIEND, payload: { id: message.from, type: 'friend' } })
       }
     }
     dispatch({ type: GET_MESSAGE, payload: message }) 
@@ -76,6 +79,7 @@ export {
   INIT_MESSAGE_LIST,
   ADD_SELF_MESSAGE,
   UPDATE_SELF_MESSAGE,
+  SORT_FRIEND,
   getMessage,
   sendMessage,
   init_message_list,
