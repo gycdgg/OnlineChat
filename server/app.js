@@ -85,10 +85,6 @@ io.use( async (socket, next) => {
   })
   await next()
 })
-app.use( async (ctx, next) => {
-  console.log('>>>>>>>>>>>>>>>>>>>>>>enter server')
-  await next()
-})
 app.use( Static(path.join(__dirname, '../client/dist'), {
   maxAge: 365 * 24 * 60 * 60
 }))

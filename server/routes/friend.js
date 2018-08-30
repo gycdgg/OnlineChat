@@ -1,5 +1,4 @@
 import { User, Friend, User_group, Group } from '../models'
-import user from '../models/user'
 
 class FriendController {
   async _get(ctx) {

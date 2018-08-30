@@ -1,5 +1,6 @@
 import { normalizeResponse } from '../middleware'
 import userController from './user'
+import { User } from '../models'
 import friendsController from './friend'
 import messageController from './message'
 import Router from 'koa-router'
@@ -33,6 +34,13 @@ router.post('/api/uploads', multiparty(), async (ctx) => {
     let filename = ctx.req.files.file.originalFilename || path.basename(ctx.req.files.file.path)
     let targetPath = `./static/uploads/${hash}${filename}`
     await fs.createReadStream(ctx.req.files.file.path).pipe(fs.createWriteStream(targetPath))
+    if(ctx.query.type === 'avatar') {
+      await User.update({
+        avatar: `${ctx.headers.origin}/static/uploads/${hash}${filename}`
+      }, {
+        where: { id: ctx.query.id }
+      })
+    }
     ctx.body = {
       url: `${ctx.headers.origin}/static/uploads/${hash}${filename}`
     }
@@ -45,7 +53,7 @@ const randomChar = (l) =>  {
   let x = '0123456789qwertyuioplkjhgfdsazxcvbnm'
   let tmp = ''
   let timestamp = new Date().getTime()
-  for(let  i = 0;i <  l;i++)  {
+  for(let  i = 0;i < l;i++)  {
     tmp  +=  x.charAt(Math.ceil(Math.random() * 100000000) % x.length)
   }
   return  timestamp + tmp

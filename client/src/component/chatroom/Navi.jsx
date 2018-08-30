@@ -46,7 +46,6 @@ class Navi extends React.Component {
 
   render() {
     const { friends, message } = this.props
-    console.log('111111111111111111111111111', friends.selected)
     const selectedId = friends.selected && friends.selected.id
     const selectedType = friends.selected && friends.selected.type
     return <div className = { styles.main__navi }>
@@ -58,7 +57,7 @@ class Navi extends React.Component {
         {
           friends.list.map((v, i) => <div className = { styles.content__chatContact + ' ' + (selectedId === v.id && selectedType === v.type ? styles.content__active : '') } onClick = { () => this.props.select_friend(v) } key = { i }>
           <div className = { styles.content__chatContact__avatar }>
-            <img src = { `/avatar/img${v.avatar}.jpg` }/>
+            <img src = { v.avatar.length > 5 ? v.avatar : `/avatar/img${v.avatar}.jpg` }/>
             { v.unread ? <i className = { styles.content__chatContact__avatar__unread }>{ v.unread }</i> : null }
           </div>
           <div className = { styles.content__chatContact__info }>

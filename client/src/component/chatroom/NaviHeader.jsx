@@ -1,16 +1,20 @@
 import React from 'react'
 import styles from './styles.styl'
-import fetch from '$fetch'
+import _fetch from '$fetch'
 import { Icon, message, Modal, Checkbox, Col, Row, Input } from 'antd'
 import * as friendAction from '../../action/friend'
+import * as userAction from '../../action/user'
 import { logout } from '../../action/user'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import 'whatwg-fetch'
+
 @connect(( user ) => ( user ), (dispatch) => ({
   get_friend_list: (...args) => dispatch(friendAction.get_friend_list(...args)),
   select_friend: (...args) => dispatch(friendAction.select_friend(...args)),
   logout: (...args) => dispatch(logout(...args)),
-  create_group: (...args) => dispatch(friendAction.create_group(...args))
+  create_group: (...args) => dispatch(friendAction.create_group(...args)),
+  change_avatar: (...args) => dispatch(userAction.change_avatar(...args))
 }))
 class NaviHeader extends React.Component {
   
@@ -20,7 +24,8 @@ class NaviHeader extends React.Component {
     logout: PropTypes.func.isRequired,
     friends: PropTypes.object.isRequired,
     create_group: PropTypes.func.isRequired,
-    select_friend: PropTypes.func.isRequired
+    select_friend: PropTypes.func.isRequired,
+    change_avatar: PropTypes.func.isRequired
   }
 
   state = {
@@ -29,7 +34,8 @@ class NaviHeader extends React.Component {
     showPop: false,
     showModal: false,
     radioGroupValue: [],
-    groupName: ''
+    groupName: '',
+    fileValue: ''
   }
 
   listener = (e) => {
@@ -46,7 +52,7 @@ class NaviHeader extends React.Component {
   }
 
   handleAdd = (id) => {
-    fetch('/api/friends', {
+    _fetch('/api/friends', {
       method: 'POST',
       body: {
         user_id: id
@@ -64,13 +70,13 @@ class NaviHeader extends React.Component {
   handleInputChange = (e) => {
     const { friends } = this.props
     this.setState({ value: e.target.value })
-    e.target.value && fetch(`/api/users?name=${e.target.value}`).then(res => {
+    e.target.value && _fetch(`/api/users?name=${e.target.value}`).then(res => {
       let _res = []
       res.map(v => {
         if(friends.list.find(_v => (_v.id === v.id) && (_v.type === 'friend'))) { 
           _res.push({ ...v, isFriend: true, type: 'friend' }) 
         } else {
-          _res.push({ ...v, isFriend: false, type: 'friend' }) 
+          _res.push({ ...v, isFriend: false, type: 'friend' })
         }
       })
       console.log(_res)
@@ -104,18 +110,44 @@ class NaviHeader extends React.Component {
       searchResults: []
     })
   }
+  
+  handleUpload = (e) => {
+    const { user } = this.props
+    let tmp = Object.assign({}, user)
+    let formData = new FormData()
+    console.log(e.target.file)
+    let file = e.target.files[0]
+    let reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = (e)  => {
+      tmp.avatar = e.target.result
+      this.props.change_avatar(tmp)
+      this.setState({ showPop: false })
+    }
+    formData.append('file', file)
+    fetch(`/api/uploads?type=avatar&&id=${user.id}`, {
+      method: 'POST',
+      body: formData
+    }).then(() => {
+      this.setState({ fileValue: '' })
+    })
+  }
+
   render() {
     const { user, friends } = this.props
-    const { value, searchResults, showPop, showModal, radioGroupValue, groupName } = this.state
+    const { value, searchResults, showPop, showModal, radioGroupValue, groupName, fileValue } = this.state
     return <div className = { styles.naviHeader }>
     <div className = { styles.naviHeader__header }>    
-      <div className = { styles.naviHeader__header__avatar }><img src = { `/avatar/img${user.avatar}.jpg` }/></div>
+      <div className = { styles.naviHeader__header__avatar }><img src = { user.avatar.length > 5 ? user.avatar : `/avatar/img${user.avatar}.jpg` }/></div>
       <div className = { styles.naviHeader__header__info }>{ user.username }</div>
       <div className = { styles.naviHeader__header__setting } onClick = { this.openPop } ref = { ref => this.setRef = ref }></div>
       { showPop ? <div className = { styles.naviHeader__header__pop } ref = { ref => this.popRef = ref }>
         <a onClick = { this.props.logout }><span  className = { styles.logout }></span>Log Out</a>
         <a><span  className = { styles.sound }></span>Sound Off</a>
         <a onClick = { this.showModal }><span  className = { styles.group }></span>Group Chat</a>
+        <a>
+          <span className = { styles.changeAvatar }> <input type = "file" id = "avatar" onChange = { this.handleUpload } value = { fileValue }/></span>Change Avatar 
+        </a>
       </div> : null }
     </div>
     <Modal
@@ -142,7 +174,7 @@ class NaviHeader extends React.Component {
         {
           searchResults.map((v, i) => <div key = { i } className = { styles.show__container__item }>
             <div className = { styles.content__chatContact__avatar }>
-              <img src = { `/avatar/img${v.avatar}.jpg` }/>
+              <img src = { user.avatar.length > 5 ? user.avatar : `/avatar/img${user.avatar}.jpg` }/>
             </div>
             <div className = { styles.item__info }>
           <div className = { styles.item__info__name }>{ v.username }</div>

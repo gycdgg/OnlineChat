@@ -6,6 +6,7 @@ const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
 const REGISTER_FAILED = 'REGISTER_FAILED'
 const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 const SELECT_USER = 'SELECT_USER'
+const CHANGE_AVATAR = 'CHANGE_AVATAR'
 
 const login = (user) => (dispatch) => fetch('/api/session', {
   method: 'POST',
@@ -38,6 +39,8 @@ const logout = () => (dispatch) => fetch('/api/session', {
 
 const select_user = (user) => (dispatch) => dispatch({ type: SELECT_USER, payload: user })
 
+const change_avatar = (user) => (dispatch) => dispatch({ type: CHANGE_AVATAR, payload: user })
+
 export {
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
@@ -45,8 +48,10 @@ export {
   REGISTER_SUCCESS,
   REGISTER_FAILED,
   SELECT_USER,
+  CHANGE_AVATAR,
   login,
   checkAuth,
   logout,
-  select_user
+  select_user,
+  change_avatar
 }

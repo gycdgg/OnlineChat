@@ -194,7 +194,7 @@ class Content extends React.Component {
               { this.isFile(v.content) ? <img src = { v.content.split('file')[1] } />  :  v.content.split('EMJ').map((v, i) => i % 2 ? <Emoji emoji = { { id: v, skin: 3 } } size = { 16 } /> : v) }
             </pre>
           </span>
-          <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }><img src = { `/avatar/img${v.avatar}.jpg` }/></span>
+          <span className = { `${styles.main__content__messages__name} ${styles.name_left}` }><img src = { user.id === v.from ? (user.avatar.length > 5 ? user.avatar : `/avatar/img${user.avatar}.jpg`) : (v.avatar.length > 5 ? v.avatar : `/avatar/img${v.avatar}.jpg`) }/></span>
           </div>) }
         </div>
       </div> : null }
