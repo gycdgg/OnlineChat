@@ -46,6 +46,7 @@ class Navi extends React.Component {
 
   render() {
     const { friends, message } = this.props
+    console.log('111111111111111111111111111', friends.selected)
     const selectedId = friends.selected && friends.selected.id
     const selectedType = friends.selected && friends.selected.type
     return <div className = { styles.main__navi }>

@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 @connect(( user ) => ( user ), (dispatch) => ({
   get_friend_list: (...args) => dispatch(friendAction.get_friend_list(...args)),
+  select_friend: (...args) => dispatch(friendAction.select_friend(...args)),
   logout: (...args) => dispatch(logout(...args)),
   create_group: (...args) => dispatch(friendAction.create_group(...args))
 }))
@@ -18,7 +19,8 @@ class NaviHeader extends React.Component {
     get_friend_list: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
     friends: PropTypes.object.isRequired,
-    create_group: PropTypes.func.isRequired
+    create_group: PropTypes.func.isRequired,
+    select_friend: PropTypes.func.isRequired
   }
 
   state = {
@@ -60,9 +62,19 @@ class NaviHeader extends React.Component {
   }
 
   handleInputChange = (e) => {
+    const { friends } = this.props
     this.setState({ value: e.target.value })
     e.target.value && fetch(`/api/users?name=${e.target.value}`).then(res => {
-      this.setState({ searchResults: res })
+      let _res = []
+      res.map(v => {
+        if(friends.list.find(_v => (_v.id === v.id) && (_v.type === 'friend'))) { 
+          _res.push({ ...v, isFriend: true, type: 'friend' }) 
+        } else {
+          _res.push({ ...v, isFriend: false, type: 'friend' }) 
+        }
+      })
+      console.log(_res)
+      this.setState({ searchResults: _res })
     })
     !e.target.value && this.setState({ searchResults: [] })
   }
@@ -86,6 +98,12 @@ class NaviHeader extends React.Component {
     })
   }
   
+  handleOpenFriendChat = (v) => {
+    this.props.select_friend(v)
+    this.setState({
+      searchResults: []
+    })
+  }
   render() {
     const { user, friends } = this.props
     const { value, searchResults, showPop, showModal, radioGroupValue, groupName } = this.state
@@ -128,7 +146,14 @@ class NaviHeader extends React.Component {
             </div>
             <div className = { styles.item__info }>
           <div className = { styles.item__info__name }>{ v.username }</div>
-          <div className = { styles.item__info__icon } onClick = { () => this.handleAdd(v.id) }><Icon type = "user-add" style = { { fontSize: 18, textAlign: 'right', color: '#fff' } }/></div>
+          <div className = { styles.item__info__icon } >
+            { v.isFriend ? 
+            <Icon 
+                type = "wechat" 
+                style = { { fontSize: 18, textAlign: 'right', color: '#fff' } }
+                onClick = { () => this.handleOpenFriendChat(v) }
+            /> : <Icon type = "user-add" onClick = { () => this.handleAdd(v.id) } style = { { fontSize: 18, textAlign: 'right', color: '#fff' } }/> }
+          </div>
           </div>
           </div>)
         }
