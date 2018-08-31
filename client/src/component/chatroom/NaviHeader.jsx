@@ -174,7 +174,7 @@ class NaviHeader extends React.Component {
         {
           searchResults.map((v, i) => <div key = { i } className = { styles.show__container__item }>
             <div className = { styles.content__chatContact__avatar }>
-              <img src = { user.avatar.length > 5 ? user.avatar : `/avatar/img${user.avatar}.jpg` }/>
+              <img src = { v.avatar.length > 5 ? v.avatar : `/avatar/img${v.avatar}.jpg` }/>
             </div>
             <div className = { styles.item__info }>
           <div className = { styles.item__info__name }>{ v.username }</div>
